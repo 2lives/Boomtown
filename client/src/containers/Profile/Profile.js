@@ -13,8 +13,12 @@ import Gravatar from "react-gravatar";
 
 class Profile extends Component {
   render() {
-    console.log(this.props.profileData);
-    return <h1>hi</h1>;
+    console.log(this.props.profileData[0]);
+    return (
+      <div>
+        <Card title={this.props.profileData[0]} />
+      </div>
+    );
   }
 }
 

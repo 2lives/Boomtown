@@ -42,10 +42,8 @@ class HeaderBar extends Component {
 
           <RaisedButton
             label="Logout"
-            default={true}
-            backgroundColor={grey900}
+            secondary={true}
             style={styles.logoutButton}
-            hoverColor={grey500}
           />
         </div>
       </Paper>

@@ -15,15 +15,15 @@ class ProfileContainer extends Component {
     const urls = ["http://localhost:3000/items", "http://localhost:3000/users"];
     this.setState({ isLoading: true });
     Promise.all(urls.map(url => fetch(url).then(resp => resp.json())))
-      .then(responses => {
-        responses[0].map(item => {
-          responses[1].map(user => {
+      .then(resp => {
+        resp[0].map(item => {
+          resp[1].map(user => {
             if (user.id === item.itemowner) {
               item.itemowner = user;
             }
           });
         });
-        this.setState({ itemsData: responses[0] });
+        this.setState({ itemsData: resp[0] });
         let personalItems = this.state.itemsData.filter(
           item => item.itemowner.id === this.props.match.params.itemownerId
         );
