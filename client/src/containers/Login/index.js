@@ -1,5 +1,5 @@
 import LoginContainer from './LoginContainer';
-import Login from './Login';
 
-export { Login };
 export default LoginContainer;
+
+//index is only for import and export

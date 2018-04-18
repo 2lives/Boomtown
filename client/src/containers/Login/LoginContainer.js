@@ -3,6 +3,8 @@ import PropTypes from 'prop-types';
 
 import Login from './Login';
 
+//all container files are stateful components
+
 class LoginContainer extends Component {
 
     static propTypes = {

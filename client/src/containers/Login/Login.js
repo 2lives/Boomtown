@@ -11,6 +11,8 @@ import logo from '../../images/boomtown-logo.svg';
 import bottomLeft from '../../images/home-bl.svg';
 import topRight from '../../images/home-tr.svg';
 
+//actual js files spit JSX, no logic.
+
 const Login = ({ login }) => (
     <div className="page login">
         <div className="logo">
