@@ -1,6 +1,5 @@
 import React, { Component } from "react";
 import Items from "./Items";
-import HeaderBar from "../../components/headerBar";
 import { connect } from "react-redux";
 import { get_items_and_users } from "../../redux/modules/Items";
 
@@ -12,17 +11,20 @@ class ItemsContainer extends Component {
   render() {
     return (
       <div>
-        <HeaderBar />
-        <Items itemsData={this.props.itemsData} />
+        {this.props.itemsData.isLoading ? (
+          <p>loader</p>
+        ) : (
+          <Items itemsData={this.props.itemsData.items} />
+        )}
       </div>
     );
   }
 }
 
 const mapStateToProps = state => ({
-  isLoading: state.items.isLoading,
-  itemsData: state.items.items,
-  itemFilters: state.items.itemFilters
+  isLoading: state.itemsData.isLoading,
+  itemsData: state.itemsData,
+  itemFilters: state.itemsData.itemFilters
 });
 
 export default connect(mapStateToProps)(ItemsContainer);

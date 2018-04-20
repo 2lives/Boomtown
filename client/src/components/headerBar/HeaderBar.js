@@ -3,9 +3,10 @@ import PropTypes from "prop-types";
 import RaisedButton from "material-ui/RaisedButton";
 import { Link, Route } from "react-router-dom";
 import logo from "../../images/boomtown-logo.svg";
-import Paper from "material-ui/Paper";
+import AppBar from "material-ui/AppBar";
 import FlatButton from "material-ui/FlatButton";
 import { grey900, grey500 } from "material-ui/styles/colors";
+import TagFilterField from "../TagFilterField";
 
 const styles = {
   width: "100vw",
@@ -29,10 +30,11 @@ const styles = {
 class HeaderBar extends Component {
   render() {
     return (
-      <Paper style={styles}>
+      <AppBar style={styles}>
         <Link to={"/"}>
           <img src={logo} alt="Boomtown Logo" style={styles.image} />
         </Link>
+        <TagFilterField />
         <div>
           <RaisedButton
             label="My Profile"
@@ -46,7 +48,7 @@ class HeaderBar extends Component {
             style={styles.logoutButton}
           />
         </div>
-      </Paper>
+      </AppBar>
     );
   }
 }
