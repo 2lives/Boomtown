@@ -8,13 +8,27 @@ class ItemsContainer extends Component {
     this.props.dispatch(get_items_and_users());
   };
 
+  filterItems = itemsData => {
+    if (itemsData.itemFilters.length > 0) {
+      let filteredItems = itemsData.items.filter(item => {
+        return item.tags.filter(
+          (
+            tag //filter all the tags
+          ) => itemsData.itemFilters.find(filter => filter === tag) //find the specific tag that the user wants
+        ).length;
+      });
+      return filteredItems;
+    }
+    return itemsData.items;
+  };
+
   render() {
     return (
       <div>
         {this.props.itemsData.isLoading ? (
-          <p>loader</p>
+          <p>loading</p>
         ) : (
-          <Items itemsData={this.props.itemsData.items} />
+          <Items itemsData={this.filterItems(this.props.itemsData)} />
         )}
       </div>
     );

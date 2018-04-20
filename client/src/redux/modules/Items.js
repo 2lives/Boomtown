@@ -1,5 +1,5 @@
 const GET_ITEMS = "GET_ITEMS";
-const GET_ITEMS_FILTER = "GET_ITEMS_FILTER";
+const GET_ITEM_FILTERS = "GET_ITEM_FILTERS";
 const GET_IS_LOADING = "GET_IS_LOADING";
 const GET_TAGS = "GET_TAGS";
 const GET_ERROR = "GET_ERROR";
@@ -15,8 +15,8 @@ export const get_tags = () => ({
   type: GET_TAGS
 });
 
-export const get_items_filter = filters => ({
-  type: GET_ITEMS_FILTER,
+export const get_item_filters = filters => ({
+  type: GET_ITEM_FILTERS,
   payload: filters
 });
 
@@ -56,7 +56,7 @@ export const get_items_and_users = () => dispatch => {
 const initialState = {
   items: [],
   isLoading: false,
-  item_filters: [],
+  itemFilters: [],
   error: ""
 };
 
@@ -76,9 +76,16 @@ export default (state = initialState, action) => {
       };
       break;
     }
-
-    case GET_TAGS: {
-      return { ...state };
+    //remove element from array, update new
+    case GET_ITEM_FILTERS: {
+      let itemFilters = [...state.itemFilters];
+      if (!itemFilters.includes(action.payload)) {
+        itemFilters.push(action.payload);
+      } else {
+        //homework
+      }
+      return { ...state, itemFilters };
+      break;
     }
 
     case GET_ERROR: {
