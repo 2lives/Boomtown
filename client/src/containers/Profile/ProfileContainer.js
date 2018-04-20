@@ -31,6 +31,8 @@ class ProfileContainer extends Component {
       })
       .then(() => this.setState({ isLoading: false }))
       .catch(error => console.log(error));
+    //     const profileData = this.state.itemsData.map();
+    //     console.log(profileData);
   }
 
   render() {

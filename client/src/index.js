@@ -6,13 +6,17 @@ import "./index.css";
 import muiTheme from "./config/theme";
 import Layout from "./components/Layout";
 import Routes from "./routes";
+import { Provider } from "react-redux";
+import createStore from "./redux/Store";
 
 const Boomtown = () => (
   <MuiThemeProvider muiTheme={muiTheme}>
-    <Layout>
-      {/* <Login /> */}
-      <Routes />
-    </Layout>
+    <Provider store={createStore}>
+      <Layout>
+        {/* <Login /> */}
+        <Routes />
+      </Layout>
+    </Provider>
   </MuiThemeProvider>
 );
 
