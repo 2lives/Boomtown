@@ -4,8 +4,6 @@ import RaisedButton from 'material-ui/RaisedButton';
 import { Link, Route } from 'react-router-dom';
 import logo from '../../images/boomtown-logo.svg';
 import AppBar from 'material-ui/AppBar';
-import FlatButton from 'material-ui/FlatButton';
-import { grey900, grey500 } from 'material-ui/styles/colors';
 import TagFilterField from '../TagFilterField';
 import { connect } from 'react-redux';
 import {
@@ -74,7 +72,6 @@ class HeaderBar extends Component {
     };
     render() {
         const tags = this.getTags(this.props.itemsData.items);
-        console.log(tags);
         return (
             <AppBar style={styles} showMenuIconButton={false}>
                 <div className="logoWrapper" style={styles.logoWrapper}>
@@ -88,7 +85,7 @@ class HeaderBar extends Component {
                     {tags.length && (
                         <TagFilterField
                             tags={tags}
-                            style={styles.TagFilterField}
+                            checkedTags={this.props.itemsData.itemFilters}
                         />
                     )}
                 </div>

@@ -76,7 +76,6 @@ export default (state = initialState, action) => {
             };
             break;
         }
-        //remove element from array, update new
         case GET_ITEM_FILTERS: {
             let itemFilters = [...state.itemFilters];
             if (!itemFilters.includes(action.payload)) {
