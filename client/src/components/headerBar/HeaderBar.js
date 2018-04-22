@@ -19,23 +19,30 @@ const styles = {
     marginBottom: '50px',
     display: 'flex',
     justifyContent: 'space-between',
-    profileButton: {
-        color: 'white'
-    },
-    logoutButton: {
-        color: 'white',
-        margin: '0 20px'
-    },
+    backgroundColor: 'white',
     image: {
+        width: '35px',
+        height: '35px',
+        marginRight: '25px',
+        marginLeft: '5px',
+        marginTop: '4px'
+    },
+    logoWrapper: {
+        display: 'flex',
+        alignItems: 'flex-start',
+        flexFlow: 'row wrap',
         position: 'absolute',
         left: '0',
-        width: '35px',
-        height: '35px'
+        padding: '10px'
+    },
+    profileButton: {
+        marginRight: '15px'
+    },
+    appButtonsWrapper: {
+        padding: '10px'
     },
     TagFilterField: {
-        position: 'absolute',
-        left: '0',
-        marginLeft: '20px'
+        paddingBottom: '10px'
     }
 };
 
@@ -70,22 +77,32 @@ class HeaderBar extends Component {
         console.log(tags);
         return (
             <AppBar style={styles} showMenuIconButton={false}>
-                <Link to={'/'}>
-                    <img src={logo} alt="Boomtown Logo" style={styles.image} />
-                </Link>
-                {tags.length && <TagFilterField tags={tags} style={styles} />}
-                <div>
+                <div className="logoWrapper" style={styles.logoWrapper}>
+                    <Link to={'/'}>
+                        <img
+                            src={logo}
+                            alt="Boomtown Logo"
+                            style={styles.image}
+                        />
+                    </Link>
+                    {tags.length && (
+                        <TagFilterField
+                            tags={tags}
+                            style={styles.TagFilterField}
+                        />
+                    )}
+                </div>
+                <div
+                    className="appButtonsWrapper"
+                    style={styles.appButtonsWrapper}
+                >
                     <RaisedButton
                         label="My Profile"
                         primary={true}
                         style={styles.profileButton}
                     />
 
-                    <RaisedButton
-                        label="Logout"
-                        secondary={true}
-                        style={styles.logoutButton}
-                    />
+                    <RaisedButton label="Logout" secondary={true} />
                 </div>
             </AppBar>
         );
