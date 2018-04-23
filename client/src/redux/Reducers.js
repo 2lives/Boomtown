@@ -1,8 +1,9 @@
-import { combineReducers } from "redux";
+import { combineReducers } from 'redux';
 
-import itemsReducer from "./modules/Items";
+import itemsReducer from './modules/Items';
+import profileReducer from './modules/Profiles';
 
 export default combineReducers({
-  itemsData: itemsReducer
-  //   profileData: profileReducer
+    itemsData: itemsReducer,
+    profileItems: profileReducer
 });

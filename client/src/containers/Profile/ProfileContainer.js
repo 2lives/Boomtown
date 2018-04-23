@@ -1,52 +1,33 @@
 import React, { Component } from 'react';
+import { connect } from 'react-redux';
+import PropTypes from 'prop-types';
 import Profile from './Profile';
 import ItemCardList from '../../components/itemCardList';
+import { get_profile_data } from '../../redux/modules/Profiles';
 
 class ProfileContainer extends Component {
-    constructor() {
-        super();
-        this.state = {
-            isLoading: false,
-            itemsData: []
-        };
-    }
-
-    componentDidMount() {
-        const urls = [
-            'http://localhost:3000/items',
-            'http://localhost:3000/users'
-        ];
-        this.setState({ isLoading: true });
-        Promise.all(urls.map(url => fetch(url).then(resp => resp.json())))
-            .then(resp => {
-                resp[0].map(item => {
-                    resp[1].map(user => {
-                        if (user.id === item.itemowner) {
-                            item.itemowner = user;
-                        }
-                    });
-                });
-                this.setState({ itemsData: resp[0] });
-                let personalItems = this.state.itemsData.filter(
-                    item =>
-                        item.itemowner.id ===
-                        this.props.match.params.itemownerId
-                );
-                this.setState({ itemsData: personalItems });
-            })
-            .then(() => this.setState({ isLoading: false }))
-            .catch(error => console.log(error));
-        //     const profileData = this.state.itemsData.map();
-        //     console.log(profileData);
-    }
+    componentDidMount = () => {
+        this.props.dispatch(
+            get_profile_data(this.props.match.params.itemownerId)
+        );
+    };
 
     render() {
+        console.log(this.props);
         return (
             <div>
-                <Profile profileData={this.state.itemsData} />
-                <ItemCardList itemsData={this.state.itemsData} />
+                {this.props.itemsData.profileItems !== [] ? (
+                    <p>Loading</p>
+                ) : (
+                    <Profile profileData={this.props.itemsData} />
+                )}
+                <ItemCardList itemsData={this.props.itemsData.profileItems} />
             </div>
         );
     }
 }
-export default ProfileContainer;
+const mapStateToProps = state => ({
+    itemsData: state.profileItems
+});
+
+export default connect(mapStateToProps)(ProfileContainer);
