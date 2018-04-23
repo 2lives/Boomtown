@@ -16,10 +16,18 @@ class ProfileContainer extends Component {
         console.log(this.props);
         return (
             <div>
-                {this.props.itemsData.profileItems !== [] ? (
-                    <p>Loading</p>
+                {this.props.itemsData.profileItems[0] ? (
+                    <div>
+                        <p>
+                            {
+                                this.props.itemsData.profileItems[0].itemowner
+                                    .fullname
+                            }
+                        </p>
+                        <Profile profileData={this.props} />
+                    </div>
                 ) : (
-                    <Profile profileData={this.props.itemsData} />
+                    <p>Loading</p>
                 )}
                 <ItemCardList itemsData={this.props.itemsData.profileItems} />
             </div>

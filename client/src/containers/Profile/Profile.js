@@ -13,9 +13,15 @@ import Gravatar from 'react-gravatar';
 
 class Profile extends Component {
     render() {
+        //    console.log(this.props);
+
         return (
             <div>
-                <Card title={this.props.profileItems} />
+                <Card
+                // title={
+                //     this.props.itemsData.profileItems[0].itemowner.fullname
+                // }
+                />
             </div>
         );
     }
