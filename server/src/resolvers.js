@@ -1,23 +1,25 @@
 import fetch from 'node-fetch';
+
+const jsonAPI = 'http://localhost:3001';
 const resolveFunctions = {
     Query: {
         items(root) {
-            return fetch(`http://localhost:3001/items`)
+            return fetch(`${jsonAPI}/items`)
                 .then(resp => resp.json())
                 .catch(error => console.log(error));
         },
         users(root) {
-            return fetch(`http://localhost:3001/users`)
+            return fetch(`${jsonAPI}/users`)
                 .then(resp => resp.json())
                 .catch(error => console.log(error));
         },
         item(root, { id }) {
-            return fetch(`http://localhost:3001/items/${id}`)
+            return fetch(`${jsonAPI}/items/${id}`)
                 .then(resp => resp.json())
                 .catch(error => console.log(error));
         },
         user(root, { id }) {
-            return fetch(`http://localhost:3001/users/${id}`)
+            return fetch(`${jsonAPI}/users/${id}`)
                 .then(resp => resp.json())
                 .catch(error => console.log(error));
         }
@@ -25,14 +27,15 @@ const resolveFunctions = {
 
     Item /*top level types, Item and Query in this case*/: {
         itemowner({ itemowner }) {
-            return fetch(`http://localhost:3001/users/${itemowner}`).then(
-                resp => resp.json()
-            );
-        },
-        borrower({ borrower }) {
-            return fetch(`http://localhost:3001/users/${borrower}`).then(resp =>
+            return fetch(`${jsonAPI}/users/${itemowner}`).then(resp =>
                 resp.json()
             );
+        },
+        async borrower({ borrower }) {
+            const user = await fetch(`${jsonAPI}/users/${borrower}`);
+            const json = await user.json();
+            if (!json.id) return null;
+            return json;
         }
     },
 
@@ -40,13 +43,13 @@ const resolveFunctions = {
         borroweditems({
             id
         }) /*this takes in id, which is an arg we set available in schema*/ {
-            return fetch(`http://localhost:3001/items/?borrower=${id}`).then(
-                resp => resp.json()
+            return fetch(`${jsonAPI}/items/?borrower=${id}`).then(resp =>
+                resp.json()
             );
         },
         owneditems({ id }) {
-            return fetch(`http://localhost:3001/users/?$itemowner=${id}`).then(
-                resp => resp.json()
+            return fetch(`${jsonAPI}/users/?$itemowner=${id}`).then(resp =>
+                resp.json()
             );
         }
     }
