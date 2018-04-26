@@ -30,7 +30,7 @@ export const get_errors = error => ({
 });
 
 export const get_items_and_users = () => dispatch => {
-    const urls = ['http://localhost:3000/items', 'http://localhost:3000/users'];
+    const urls = ['http://localhost:3001/items', 'http://localhost:3001/users'];
     let items = [];
     let people = [];
     dispatch(get_is_loading(true));

@@ -17,7 +17,7 @@ export const get_profile_error = error => ({
 });
 
 export const get_profile_data = profileData => dispatch => {
-    const urls = ['http://localhost:3000/items', 'http://localhost:3000/users'];
+    const urls = ['http://localhost:3001/items', 'http://localhost:3001/users'];
     dispatch(get_profile_is_loading(true));
 
     const matchItemownerToUserBio = itemsWithBio => {
