@@ -9,16 +9,20 @@ import Routes from './routes';
 import { Provider } from 'react-redux';
 import createStore from './redux/Store';
 import { BrowserRouter as Router } from 'react-router-dom';
+import { ApolloProvider } from 'react-apollo';
+import client from './config/apolloClient';
 
 const Boomtown = () => (
     <MuiThemeProvider muiTheme={muiTheme}>
-        <Provider store={createStore}>
-            <Router>
-                <Layout>
-                    <Routes />
-                </Layout>
-            </Router>
-        </Provider>
+        <ApolloProvider client={client}>
+            <Provider store={createStore}>
+                <Router>
+                    <Layout>
+                        <Routes />
+                    </Layout>
+                </Router>
+            </Provider>
+        </ApolloProvider>
     </MuiThemeProvider>
 );
 
