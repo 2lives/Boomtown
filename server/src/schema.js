@@ -23,6 +23,16 @@ const typeDefs = `
           borroweditems: [Item]
      }
 
+     type Mutation {
+          addItem (
+            title: String!
+            itemowner: String
+            imageurl: String
+            tags: String
+            created: String
+          ): Item
+        }
+
      type Query {
           items: [Item]
           users: [User]

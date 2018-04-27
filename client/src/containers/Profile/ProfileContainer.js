@@ -1,41 +1,49 @@
 import React, { Component } from 'react';
-import { connect } from 'react-redux';
 import PropTypes from 'prop-types';
 import Profile from './Profile';
 import ItemCardList from '../../components/itemCardList';
-import { get_profile_data } from '../../redux/modules/Profiles';
+import { Query } from 'react-apollo';
+import gql from 'graphql-tag';
+
+const fetchUserItems = gql`
+    query fetchUserItems($id: ID!) {
+        user(id: $id) {
+            id
+            bio
+            fullname
+            email
+            owneditems {
+                id
+                imageurl
+                tags
+                description
+                itemowner {
+                    id
+                    fullname
+                    email
+                }
+            }
+            borroweditems {
+                title
+            }
+        }
+    }
+`;
 
 class ProfileContainer extends Component {
-    componentDidMount = () => {
-        this.props.dispatch(
-            get_profile_data(this.props.match.params.itemownerId)
-        );
-    };
-
     render() {
-        console.log(this.props);
+        const id = this.props.match.params.itemownerId;
         return (
-            <div>
-                {this.props.itemsData.profileItems[0] ? (
-                    <div>
-                        <p>
-                            {
-                                this.props.itemsData.profileItems[0].itemowner
-                                    .fullname
-                            }
-                        </p>
-                        <Profile profileData={this.props} />
-                    </div>
-                ) : (
-                    <p>Loading</p>
-                )}
-                <ItemCardList itemsData={this.props.itemsData.profileItems} />
-            </div>
+            <Query query={fetchUserItems} variables={{ id }}>
+                {({ loading, error, data }) => {
+                    console.log(data);
+                    console.log(this.props);
+                    if (loading) return <p>loading </p>;
+                    if (error) return <p>error</p>;
+                    return <ItemCardList itemsData={data.user.owneditems} />;
+                }}
+            </Query>
         );
     }
 }
-const mapStateToProps = state => ({
-    itemsData: state.profileItems
-});
-
-export default connect(mapStateToProps)(ProfileContainer);
+export default ProfileContainer;

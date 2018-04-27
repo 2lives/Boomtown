@@ -48,9 +48,31 @@ const resolveFunctions = {
             );
         },
         owneditems({ id }) {
-            return fetch(`${jsonAPI}/users/?$itemowner=${id}`).then(resp =>
+            return fetch(`${jsonAPI}/items/?itemowner=${id}`).then(resp =>
                 resp.json()
             );
+        }
+    },
+    Mutation: {
+        addItem(root, args) {
+            const newItem = {
+                title: args.title,
+                itemowner: args.itemowner,
+                imageurl: args.imageurl,
+                tags: args.tags,
+                created: args.created
+            };
+
+            fetch(`${jsonAPI}/items`, {
+                method: 'POST',
+                body: JSON.stringify(newItem),
+                headers: {
+                    'Content-Type': 'application/json'
+                }
+            })
+                .then(res => res.json())
+                .catch(error => console.error('Error:', error));
+            return newItem;
         }
     }
 };
