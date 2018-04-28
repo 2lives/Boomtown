@@ -24,33 +24,26 @@ const resolveFunctions = {
                 .catch(error => console.log(error));
         }
     },
-
+    //if resolver is going to be making multiple requests for data, use loader
     Item /*top level types, Item and Query in this case*/: {
-        itemowner({ itemowner }) {
-            return fetch(`${jsonAPI}/users/${itemowner}`).then(resp =>
-                resp.json()
-            );
+        itemowner({ id }, args, context) {
+            return context.loaders.ItemownerUser.load(id);
         },
         async borrower({ borrower }) {
             const user = await fetch(`${jsonAPI}/users/${borrower}`);
             const json = await user.json();
             if (!json.id) return null;
             return json;
+            //make loader
         }
     },
 
     User: {
-        borroweditems({
-            id
-        }) /*this takes in id, which is an arg we set available in schema*/ {
-            return fetch(`${jsonAPI}/items/?borrower=${id}`).then(resp =>
-                resp.json()
-            );
+        borroweditems({ id }, args, context) {
+            return context.loaders.UserBorrowedItems.load(id);
         },
-        owneditems({ id }) {
-            return fetch(`${jsonAPI}/items/?itemowner=${id}`).then(resp =>
-                resp.json()
-            );
+        owneditems({ id }, args, context) {
+            return context.loaders.UserOwnedItems.load(id);
         }
     },
     Mutation: {
