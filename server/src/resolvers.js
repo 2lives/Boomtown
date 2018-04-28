@@ -26,8 +26,8 @@ const resolveFunctions = {
     },
     //if resolver is going to be making multiple requests for data, use loader
     Item /*top level types, Item and Query in this case*/: {
-        itemowner({ id }, args, context) {
-            return context.loaders.ItemownerUser.load(id);
+        itemowner({ itemowner }, args, context) {
+            return context.loaders.ItemownerUser.load(itemowner);
         },
         async borrower({ borrower }) {
             const user = await fetch(`${jsonAPI}/users/${borrower}`);
