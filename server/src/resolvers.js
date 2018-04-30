@@ -29,12 +29,10 @@ const resolveFunctions = {
         itemowner({ itemowner }, args, context) {
             return context.loaders.ItemownerUser.load(itemowner);
         },
-        async borrower({ borrower }) {
-            const user = await fetch(`${jsonAPI}/users/${borrower}`);
-            const json = await user.json();
-            if (!json.id) return null;
-            return json;
-            //make loader
+        async borrower({ borrower }, args, context) {
+            return borrower
+                ? await context.loaders.ItemBorrower.load(borrower)
+                : null;
         }
     },
 

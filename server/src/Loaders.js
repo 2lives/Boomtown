@@ -1,7 +1,10 @@
 import DataLoader from 'dataloader';
-import { getUserOwnedItems } from './jsonServer';
-import { getUserBorrowedItems } from './jsonServer';
-import { getItemownerUser } from './jsonServer';
+import {
+    getUserOwnedItems,
+    getUserBorrowedItems,
+    getItemownerUser,
+    getItemBorrower
+} from './jsonServer';
 
 export function Loaders() {
     return {
@@ -14,6 +17,9 @@ export function Loaders() {
         }),
         ItemownerUser: new DataLoader(ids => {
             return Promise.all(ids.map(id => getItemownerUser(id)));
+        }),
+        ItemBorrower: new DataLoader(ids => {
+            return Promise.all(ids.map(id => getItemBorrower(id)));
         })
     };
 }
