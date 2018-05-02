@@ -1,6 +1,3 @@
-import { makeExecutableSchema } from 'graphql-tools';
-import resolvers from './resolvers';
-
 const typeDefs = ` 
      type Item{
           id: ID!
@@ -41,7 +38,4 @@ const typeDefs = `
      }
 
 `;
-export default makeExecutableSchema({
-    typeDefs,
-    resolvers
-});
+export default typeDefs;

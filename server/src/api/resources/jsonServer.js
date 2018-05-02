@@ -1,51 +1,50 @@
 import fetch from 'node-fetch';
 
-const jsonAPI = 'http://localhost:3001';
-const resolveFunctions = {
-    Query: {
-        items(root) {
+export default function(app) {
+    const jsonAPI = 'http://localhost:3001';
+
+    return {
+        getItems(root) {
             return fetch(`${jsonAPI}/items`)
                 .then(resp => resp.json())
                 .catch(error => console.log(error));
         },
-        users(root) {
+        getUsers(root) {
             return fetch(`${jsonAPI}/users`)
                 .then(resp => resp.json())
                 .catch(error => console.log(error));
         },
-        item(root, { id }) {
+        getItem(root, { id }) {
             return fetch(`${jsonAPI}/items/${id}`)
                 .then(resp => resp.json())
                 .catch(error => console.log(error));
         },
-        user(root, { id }) {
+        getUser(root, { id }) {
             return fetch(`${jsonAPI}/users/${id}`)
                 .then(resp => resp.json())
                 .catch(error => console.log(error));
-        }
-    },
-    //if resolver is going to be making multiple requests for data, use loader
-    Item /*top level types, Item and Query in this case*/: {
-        itemowner({ itemowner }, args, context) {
-            return context.loaders.ItemownerUser.load(itemowner);
         },
-        async borrower({ borrower }, args, context) {
-            return borrower
-                ? await context.loaders.ItemBorrower.load(borrower)
-                : null;
-        }
-    },
+        getUserOwnedItems(id) {
+            return fetch(`${jsonAPI}/items/?itemowner=${id}`).then(resp =>
+                resp.json()
+            );
+        },
 
-    User: {
-        borroweditems({ id }, args, context) {
-            return context.loaders.UserBorrowedItems.load(id);
+        getUserBorrowedItems(id) {
+            return fetch(`${jsonAPI}/items/?borrower=${id}`).then(resp =>
+                resp.json()
+            );
         },
-        owneditems({ id }, args, context) {
-            return context.loaders.UserOwnedItems.load(id);
-        }
-    },
-    Mutation: {
-        addItem(root, args) {
+
+        getItemownerUser(id) {
+            return fetch(`${jsonAPI}/users/${id}`).then(resp => resp.json());
+        },
+
+        getItemBorrower(id) {
+            return fetch(`${jsonAPI}/users/${id}`).then(resp => resp.json());
+        },
+
+        addItem() {
             const newItem = {
                 title: args.title,
                 itemowner: args.itemowner,
@@ -65,6 +64,5 @@ const resolveFunctions = {
                 .catch(error => console.error('Error:', error));
             return newItem;
         }
-    }
-};
-export default resolveFunctions;
+    };
+}

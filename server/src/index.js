@@ -1,33 +1,15 @@
 import express from 'express';
-import bodyParser from 'body-parser';
-import { graphqlExpress, graphiqlExpress } from 'apollo-server-express';
-import schema from './schema';
 import cors from 'cors';
-import { Loaders } from './Loaders';
+const { Pool } = require('pg');
+import initConfigs from '../src/configs';
+import initAPI from './api';
 
 const app = express();
 const PORT = 3333;
-
 app.use('*', cors());
 
-app.use(
-    '/graphql',
-    bodyParser.json(),
-    graphqlExpress({
-        schema,
-        context: {
-            fun: true,
-            loaders: Loaders()
-        }
-    })
-);
-
-app.use(
-    '/graphiql',
-    graphiqlExpress({
-        endpointURL: '/graphql'
-    })
-);
+initConfigs(app);
+initAPI(app);
 
 app.listen(PORT, err => {
     if (err) {
