@@ -4,7 +4,7 @@ export default function({ jsonResources, pgResources }) {
     return {
         Query: {
             items(root) {
-                return pgResources.getItems();
+                return jsonResources.getItems();
             },
             users(root) {
                 return jsonResources.getUsers();

@@ -1,30 +1,51 @@
-import React, { Component } from 'react';
-import ItemCardList from '../../components/itemCardList';
-import {
-    Paper,
-    Card,
-    CardActions,
-    CardHeader,
-    CardMedia,
-    CardTitle,
-    CardText
-} from 'material-ui/Card';
+import React from 'react';
+import PropTypes from 'prop-types';
+import { Card, CardText, CardTitle } from 'material-ui/Card';
 import Gravatar from 'react-gravatar';
 
-class Profile extends Component {
-    render() {
-        //    console.log(this.props);
-
-        return (
-            <div>
-                <Card
-                // title={
-                //     this.props.itemsData.profileItems[0].itemowner.fullname
-                // }
+const Profile = ({ items }) => (
+    <div>
+        <Card
+            style={{
+                display: 'flex',
+                justifyContent: 'center',
+                alignItems: 'center',
+                margin: '0 auto',
+                width: '800px',
+                height: '225px'
+            }}
+            containerStyle={{
+                display: 'flex',
+                flexDirection: 'row',
+                alignItems: 'center',
+                justifyContent: 'space-around',
+                width: '100%'
+            }}
+        >
+            <CardTitle
+            //  title={currentUser.fullname}
+            //  subtitle={currentUser.bio}
+            />
+            <div className="profile-card-container">
+                <CardText>
+                    {/* {' '}
+                    <div>{`${Object.keys(items).length} Items Shared`}</div>
+                    <div>{`${borrowed.length} Items borrowed`}</div>{' '} */}
+                </CardText>
+                <Gravatar
+                // email={currentUser.email}
+                // style={{ borderRadius: '50%' }}
+                // size={175}
                 />
             </div>
-        );
-    }
-}
+        </Card>
+    </div>
+);
+
+Profile.propTypes = {
+    //     currentUser: PropTypes.object.isRequired,
+    //     items: PropTypes.array.isRequired,
+    //     borrowed: PropTypes.array.isRequired
+};
 
 export default Profile;
