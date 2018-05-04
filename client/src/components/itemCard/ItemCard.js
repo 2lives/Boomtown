@@ -3,7 +3,6 @@ import MuiThemeProvider from 'material-ui/styles/MuiThemeProvider';
 import { Link } from 'react-router-dom';
 import moment from 'moment';
 import MD5 from 'crypto-js/md5';
-//import gravatar
 
 import {
     Card,
@@ -13,7 +12,7 @@ import {
     CardTitle,
     CardText
 } from 'material-ui/Card';
-import FlatButton from 'material-ui/FlatButton';
+import RaisedButton from 'material-ui/RaisedButton';
 
 const ItemCard = props => {
     const itemsData = props.itemsData;
@@ -32,7 +31,7 @@ const ItemCard = props => {
             <CardTitle title={itemsData.title} subtitle={itemsData.tags} />
             <CardText>{itemsData.description}</CardText>
             <CardActions>
-                <FlatButton label="BORROW" />
+                <RaisedButton label="BORROW" secondary={true} />
             </CardActions>
         </Card>
     );

@@ -38,7 +38,7 @@ export default function({ jsonResources, pgResources }) {
         },
         Mutation: {
             addItem(root, args) {
-                return pgResources.addItem();
+                return jsonResources.addItem();
             }
         }
     };
