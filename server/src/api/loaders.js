@@ -1,6 +1,6 @@
 import DataLoader from 'dataloader';
 
-export default function({ jsonResources, pgResources }) {
+export default function({ jsonResources, firebaseResources, pgResources }) {
     return {
         UserOwnedItems: new DataLoader(ids => {
             return Promise.all(

@@ -14,14 +14,17 @@ import gql from 'graphql-tag';
 const addItem = gql`
     mutation addItem(
         $title: String!
-        $itemowner: String
-        $imageurl: String
-        $tags: [String]
-        $created: String
+        $description: String!
+        $itemowner: String!
+        $imageurl: String!
+        $tags: [String]!
+        $available: Boolean!
+        $created: String!
     ) {
         addItem(
             title: $title
             description: $description
+            itemowner: $itemowner
             imageurl: $imageurl
             tags: $tags
             created: $created
@@ -30,33 +33,33 @@ const addItem = gql`
     }
 `;
 
-const SELECT_FIELDS = [
+const tags = [
     {
-        tagid: 'Household Items',
+        tagid: '1',
         value: 'Household Items'
     },
     {
-        tagid: 'Recreational Equipment',
+        tagid: '2',
         value: 'Recreational Equipment'
     },
     {
-        tagid: 'Musical Instruments',
+        tagid: '3',
         value: 'Musical Instruments'
     },
     {
-        tagid: 'Tools',
+        tagid: '4',
         value: 'Tools'
     },
     {
-        tagid: 'Physical Media',
+        tagid: '5',
         value: 'Physical Media'
     },
     {
-        tagid: 'Sporting Goods',
+        tagid: '6',
         value: 'Sporting Goods'
     },
     {
-        tagid: 'Electronics',
+        tagid: '7',
         value: 'Electronics'
     }
 ];
@@ -76,7 +79,7 @@ class ShareForm extends Component {
         const { stepIndex } = this.state;
         this.setState({
             stepIndex: stepIndex + 1,
-            finished: stepIndex >= 2
+            finished: stepIndex >= 4
         });
     };
 
@@ -99,7 +102,9 @@ class ShareForm extends Component {
     validate(...args) {
         console.log('validating:', args);
     }
-
+    onSubmit(values) {
+        console.log('Form was submitted', values);
+    }
     renderStepActions(step) {
         const { stepIndex } = this.state;
 
@@ -109,13 +114,14 @@ class ShareForm extends Component {
                     label={stepIndex === 3 ? 'Confirm' : 'Next'}
                     disableTouchRipple={true}
                     disableFocusRipple={true}
-                    primary={true}
+                    default={true}
                     onClick={this.handleNext}
                     style={{ marginRight: 12 }}
                 />
                 {step > 0 && (
-                    <FlatButton
+                    <RaisedButton
                         label="Back"
+                        secondary={true}
                         disabled={stepIndex === 0}
                         disableTouchRipple={true}
                         disableFocusRipple={true}
@@ -129,186 +135,214 @@ class ShareForm extends Component {
     render() {
         const { finished, stepIndex } = this.state;
         return (
-            <Mutation mutation={addItem}>
-                <Form
-                    onSubmit={values => this.onSubmit(values)}
-                    validate={this.validate.bind(this)}
-                    render={({ handleSubmit, pristine, invalid, values }) => (
-                        <form
-                            onSubmit={e => {
-                                e.preventDefault();
-                                handleSubmit(values);
-                                addItem({
-                                    variables: {
-                                        ...values,
-                                        created: new Date(),
-                                        available: true,
-                                        itemowner:
-                                            'k721A4pRNggCx7b6ryEE8vx1VIi1',
-                                        tags: this.state.selectedTags.map(tag =>
-                                            tag.tagid.toString()
-                                        )
-                                    }
-                                });
-                            }}
-                        >
-                            }
-                            <Stepper
-                                activeStep={stepIndex}
-                                orientation="vertical"
+            //   <Mutation mutation={addItem}>
+            <Form
+                onSubmit={values => this.onSubmit(values)}
+                validate={this.validate.bind(this)}
+                render={({ handleSubmit, pristine, invalid, values }) => (
+                    <Mutation mutation={addItem}>
+                        {(addItem, { data }) => (
+                            <form
+                                onSubmit={e => {
+                                    e.preventDefault();
+                                    handleSubmit(values);
+                                    addItem({
+                                        variables: {
+                                            ...values,
+                                            created: new Date(),
+                                            available: true,
+                                            itemowner:
+                                                'k721A4pRNggCx7b6ryEE8vx1VIi1',
+                                            tags: this.state.selectedTags.map(
+                                                tag => tag.tagid.toString()
+                                            )
+                                        }
+                                    });
+                                }}
                             >
-                                <Step>
-                                    <StepLabel>Add an Image</StepLabel>
-                                    <StepContent>
-                                        <p>
-                                            We live in a visual culture. Upload
-                                            an image of the item you're sharing.
-                                        </p>
-                                        <RaisedButton
-                                            type="file"
-                                            label="upload image"
-                                        >
-                                            <input
-                                                type="file"
+                                <Stepper
+                                    activeStep={stepIndex}
+                                    orientation="vertical"
+                                >
+                                    <Step>
+                                        <StepLabel>Add an Image</StepLabel>
+                                        <StepContent>
+                                            <p>
+                                                We live in a visual culture.
+                                                Upload an image of the item
+                                                you're sharing.
+                                            </p>
+
+                                            <Field
                                                 name="imageurl"
+                                                type="text"
+                                                render={({ input, meta }) => (
+                                                    <div>
+                                                        <RaisedButton
+                                                            label="select an image"
+                                                            containerElement="label"
+                                                            labelPosition="before"
+                                                        >
+                                                            <input
+                                                                type="file"
+                                                                style={{
+                                                                    display:
+                                                                        'none'
+                                                                }}
+                                                            />
+                                                        </RaisedButton>
+                                                    </div>
+                                                )}
                                             />
-                                        </RaisedButton>
-                                        {this.renderStepActions(1)}
-                                    </StepContent>
-                                </Step>
-                                <Step>
-                                    <StepLabel>
-                                        Add Title & Description
-                                    </StepLabel>
-                                    <StepContent>
-                                        <p>
-                                            Folks need to know what you're
-                                            sharing. Give them a clue by adding
-                                            a title & description.
-                                        </p>
-                                        <Field
-                                            name="title"
-                                            type="text"
-                                            render={({ input, meta }) => (
-                                                <div>
-                                                    <TextField
-                                                        {...input}
-                                                        floatingLabelText="Title"
-                                                    />
+                                            {this.renderStepActions(1)}
+                                        </StepContent>
+                                    </Step>
+                                    <Step>
+                                        <StepLabel>
+                                            Add Title & Description
+                                        </StepLabel>
+                                        <StepContent>
+                                            <p>
+                                                Folks need to know what you're
+                                                sharing. Give them a clue by
+                                                adding a title & description.
+                                            </p>
+                                            <Field
+                                                name="title"
+                                                type="text"
+                                                render={({ input, meta }) => (
+                                                    <div>
+                                                        <TextField
+                                                            {...input}
+                                                            floatingLabelText="Title"
+                                                        />
 
-                                                    {meta.touched &&
-                                                        meta.error && (
-                                                            <span>
-                                                                {meta.error}
-                                                            </span>
-                                                        )}
-                                                </div>
-                                            )}
-                                        />
-                                        <Field
-                                            name="description"
-                                            onChange={value =>
-                                                console.log(value)
-                                            }
-                                            render={({ input, meta }) => (
-                                                <div>
-                                                    <TextField
-                                                        {...input}
-                                                        floatingLabelText="Description"
-                                                    />
+                                                        {meta.touched &&
+                                                            meta.error && (
+                                                                <span>
+                                                                    {meta.error}
+                                                                </span>
+                                                            )}
+                                                    </div>
+                                                )}
+                                            />
+                                            <Field
+                                                name="description"
+                                                onChange={value =>
+                                                    console.log(value)
+                                                }
+                                                render={({ input, meta }) => (
+                                                    <div>
+                                                        <TextField
+                                                            {...input}
+                                                            floatingLabelText="Description"
+                                                        />
 
-                                                    {meta.touched &&
-                                                        meta.error && (
-                                                            <span>
-                                                                {meta.error}
-                                                            </span>
-                                                        )}
-                                                </div>
-                                            )}
-                                        />
+                                                        {meta.touched &&
+                                                            meta.error && (
+                                                                <span>
+                                                                    {meta.error}
+                                                                </span>
+                                                            )}
+                                                    </div>
+                                                )}
+                                            />
 
-                                        {this.renderStepActions(2)}
-                                    </StepContent>
-                                </Step>
-                                <Step>
-                                    <StepLabel>Categorize Your Item</StepLabel>
-                                    <StepContent>
-                                        <p>
-                                            To share an item, you'll add it to
-                                            our list of categories. You can
-                                            select multiple categories.
-                                        </p>
+                                            {this.renderStepActions(2)}
+                                        </StepContent>
+                                    </Step>
+                                    <Step>
+                                        <StepLabel>
+                                            Categorize Your Item
+                                        </StepLabel>
+                                        <StepContent>
+                                            <p>
+                                                To share an item, you'll add it
+                                                to our list of categories. You
+                                                can select multiple categories.
+                                            </p>
 
-                                        <Field
-                                            name="tags"
-                                            onChange={value =>
-                                                console.log(value)
-                                            }
-                                            render={({ input, meta }) => (
-                                                <div>
-                                                    <SelectField
-                                                        multiple
-                                                        {...input}
-                                                        hintText="Select Categories"
-                                                        value={this.state.tags}
-                                                        checked={this.state.tags.indexOf(
-                                                            SELECT_FIELDS.tagid
-                                                        )}
-                                                        selectionRenderer={
-                                                            this
-                                                                .selectionRenderer
-                                                        }
-                                                        onChange={this.handleChange(
-                                                            SELECT_FIELDS
-                                                                .value[0]
-                                                        )}
-                                                    >
-                                                        {SELECT_FIELDS.map(
-                                                            (
-                                                                { id, value },
-                                                                i
-                                                            ) => (
-                                                                <MenuItem
-                                                                    key={
-                                                                        SELECT_FIELDS.tagid
-                                                                    }
-                                                                    value={
-                                                                        SELECT_FIELDS.value
-                                                                    }
-                                                                />
-                                                            )
-                                                        )}
-                                                    </SelectField>
+                                            <Field
+                                                name="tags"
+                                                render={({
+                                                    input,
+                                                    meta,
+                                                    value
+                                                }) => (
+                                                    <div>
+                                                        <SelectField
+                                                            multiple
+                                                            {...input}
+                                                            hintText="Select Categories"
+                                                            value="tags"
+                                                            selectionRenderer={
+                                                                this
+                                                                    .selectionRenderer
+                                                            }
+                                                            onChange={(
+                                                                event,
+                                                                index,
+                                                                value
+                                                            ) =>
+                                                                this.handleChange(
+                                                                    value[0]
+                                                                )
+                                                            }
+                                                        >
+                                                            {tags.map(tag => {
+                                                                return (
+                                                                    <MenuItem
+                                                                        insetChildren
+                                                                        key={
+                                                                            tag.tagid
+                                                                        }
+                                                                        value={
+                                                                            tag
+                                                                        }
+                                                                        primaryText={
+                                                                            tag.value
+                                                                        }
+                                                                        checked={
+                                                                            this.state.selectedTags.indexOf(
+                                                                                tag
+                                                                            ) >
+                                                                            -1
+                                                                        }
+                                                                    />
+                                                                );
+                                                            })}
+                                                        </SelectField>
 
-                                                    {meta.touched &&
-                                                        meta.error && (
-                                                            <span>
-                                                                {meta.error}
-                                                            </span>
-                                                        )}
-                                                </div>
-                                            )}
-                                        />
+                                                        {meta.touched &&
+                                                            meta.error && (
+                                                                <span>
+                                                                    {meta.error}
+                                                                </span>
+                                                            )}
+                                                    </div>
+                                                )}
+                                            />
 
-                                        {this.renderStepActions(3)}
-                                    </StepContent>
-                                </Step>
-                                <Step>
-                                    <StepLabel>Confirm Things!</StepLabel>
-                                    <StepContent>
-                                        <p>
-                                            Great! If you're happy with
-                                            everything, tap the button.
-                                        </p>
-                                        {this.renderStepActions(4)}
-                                    </StepContent>
-                                </Step>
-                            </Stepper>
-                            <button type="submit">submit</button>
-                        </form>
-                    )}
-                />
-            </Mutation>
+                                            {this.renderStepActions(3)}
+                                        </StepContent>
+                                    </Step>
+                                    <Step>
+                                        <StepLabel>Confirm Things!</StepLabel>
+                                        <StepContent>
+                                            <p>
+                                                Great! If you're happy with
+                                                everything, tap the button.
+                                            </p>
+                                            {this.renderStepActions(4)}
+                                        </StepContent>
+                                    </Step>
+                                </Stepper>
+                                <button type="submit">submit</button>
+                            </form>
+                        )}
+                    </Mutation>
+                )}
+            />
         );
     }
 }

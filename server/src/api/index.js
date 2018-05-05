@@ -6,13 +6,16 @@ import initJson from './resources/jsonServer';
 import bodyParser from 'body-parser';
 import { graphqlExpress, graphiqlExpress } from 'apollo-server-express';
 import { makeExecutableSchema } from 'graphql-tools';
+import initFirebase from './resources/firebase';
 
 export default function(app) {
     const jsonResources = initJson(app);
     const pgResources = initPostgres(app);
+    const firebaseResources = initFirebase(app);
     const resolvers = createResolvers({
         jsonResources,
-        pgResources
+        pgResources,
+        firebaseResources
     });
 
     const graphQLSchema = makeExecutableSchema({
@@ -36,7 +39,8 @@ export default function(app) {
                 fun: true,
                 loaders: createLoaders({
                     jsonResources,
-                    pgResources
+                    pgResources,
+                    firebaseResources
                 })
             }
         })

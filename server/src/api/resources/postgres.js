@@ -9,7 +9,27 @@ export default function(app) {
     });
     return {
         getItems() {
-            return pool.query('SELECT * FROM items').then(resp => resp.rows);
+            return pool
+                .query(
+                    // `SELECT * FROM items`
+                    `SELECT
+                              items.id,
+                            items.title,
+                            items.imageurl,
+                            items.description,
+                            items.created,
+                            items.itemowner,
+                            items.borrower,
+                            array_agg(tags.tag) AS tags
+                                FROM items
+                                RIGHT OUTER JOIN itemtags
+                                    ON itemtags.itemid = items.id
+                                INNER JOIN tags
+                                    ON tags.tagid = itemtags.tags
+                                GROUP BY items.id
+                        `
+                )
+                .then(res => res.rows);
         },
         getItem(id) {
             return pool

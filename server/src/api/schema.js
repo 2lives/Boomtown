@@ -4,7 +4,7 @@ const typeDefs = `
           title: String!
           description: String!
           imageurl: String!
-          tags: [String]!
+          tags: [String]
           itemowner: User!
           created: String!
           available: Boolean

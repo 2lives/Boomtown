@@ -1,19 +1,25 @@
 import fetch from 'node-fetch';
+import {
+    getItem,
+    getUser,
+    getUserOwnedItems,
+    getBorrowedItems
+} from './resources/jsonServer';
 
-export default function({ jsonResources, pgResources }) {
+export default function({ jsonResources, firebaseResources, pgResources }) {
     return {
         Query: {
             items(root) {
-                return jsonResources.getItems();
+                return pgResources.getItems();
             },
             users(root) {
-                return jsonResources.getUsers();
+                return firebaseResources.getUsers();
             },
             item({ id }) {
-                return jsonResources.getItem();
+                return pgResources.getItem();
             },
             user({ id }) {
-                return jsonResources.getUser();
+                return firebaseResources.getUser();
             }
         },
 
@@ -38,7 +44,7 @@ export default function({ jsonResources, pgResources }) {
         },
         Mutation: {
             addItem(root, args) {
-                return jsonResources.addItem();
+                return pgResources.addItem();
             }
         }
     };

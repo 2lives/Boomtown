@@ -12,6 +12,14 @@ import { BrowserRouter as Router } from 'react-router-dom';
 import { ApolloProvider } from 'react-apollo';
 import client from './config/apolloClient';
 
+// FirebaseAuth.onAuthStateChanged(user => {
+//     if (user) {
+//         store.dispatch(updateAuthState(user));
+//     } else {
+//         store.dispatch(updateAuthState(false));
+//     }
+// });
+
 const Boomtown = () => (
     <MuiThemeProvider muiTheme={muiTheme}>
         <ApolloProvider client={client}>
