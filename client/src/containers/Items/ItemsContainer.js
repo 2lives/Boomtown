@@ -4,7 +4,7 @@ import { Query } from 'react-apollo';
 import gql from 'graphql-tag';
 
 const fetchItems = gql`
-    query fetchItems {
+    query {
         items {
             title
             description
@@ -51,7 +51,5 @@ class ItemsContainer extends Component {
         );
     }
 }
-//   if you want data in a component, wrap it in query
-//   connect?
 
 export default ItemsContainer;

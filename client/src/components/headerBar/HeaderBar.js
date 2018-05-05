@@ -45,13 +45,13 @@ const styles = {
 };
 
 class HeaderBar extends Component {
-    componentDidMount() {
-        const urls = [
-            'http://localhost:3000/items',
-            'http://localhost:3000/users'
-        ];
-        this.props.dispatch(get_items_and_users(urls));
-    }
+    //     componentDidMount() {
+    //         const urls = [
+    //             'http://localhost:3000/items',
+    //             'http://localhost:3000/users'
+    //         ];
+    //         this.props.dispatch(get_items_and_users(urls));
+    //     }
 
     getTags = items => {
         let tags = [];

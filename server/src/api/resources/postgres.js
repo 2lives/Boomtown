@@ -11,7 +11,6 @@ export default function(app) {
         getItems() {
             return pool
                 .query(
-                    // `SELECT * FROM items`
                     `SELECT
                               items.id,
                             items.title,

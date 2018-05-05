@@ -12,9 +12,9 @@ const typeDefs = `
      }
 
      type User {
-          id: ID!
-          fullname: String!
-          email: String!
+          id: ID
+          fullname: String
+          email: String
           bio: String
           owneditems: [Item]
           borroweditems: [Item]

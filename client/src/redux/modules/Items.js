@@ -29,29 +29,29 @@ export const get_errors = error => ({
     payload: error
 });
 
-export const get_items_and_users = () => dispatch => {
-    const urls = ['http://localhost:3001/items', 'http://localhost:3001/users'];
-    let items = [];
-    let people = [];
-    dispatch(get_is_loading(true));
-    Promise.all(urls.map(url => fetch(url)))
-        .then(resp => Promise.all(resp.map(resp => resp.json())))
-        .then(resp => {
-            items = resp[0];
-            people = resp[1];
-        })
-        .then(objects => {
-            items.map(item => {
-                people.find(profile => {
-                    if (profile.id === item.itemowner) {
-                        item.itemowner = profile;
-                    }
-                });
-            });
-        })
-        .then(() => dispatch(get_items(items)))
-        .catch(error => dispatch(get_errors(error)));
-};
+// export const get_items_and_users = () => dispatch => {
+//     const urls = ['http://localhost:3001/items', 'http://localhost:3001/users'];
+//     let items = [];
+//     let people = [];
+//     dispatch(get_is_loading(true));
+//     Promise.all(urls.map(url => fetch(url)))
+//         .then(resp => Promise.all(resp.map(resp => resp.json())))
+//         .then(resp => {
+//             items = resp[0];
+//             people = resp[1];
+//         })
+//         .then(objects => {
+//             items.map(item => {
+//                 people.find(profile => {
+//                     if (profile.id === item.itemowner) {
+//                         item.itemowner = profile;
+//                     }
+//                 });
+//             });
+//         })
+//         .then(() => dispatch(get_items(items)))
+//         .catch(error => dispatch(get_errors(error)));
+// };
 
 const initialState = {
     items: [],

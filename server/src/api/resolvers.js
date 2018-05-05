@@ -6,6 +6,8 @@ import {
     getBorrowedItems
 } from './resources/jsonServer';
 
+const jsonApi = 'http://localhost:3001';
+
 export default function({ jsonResources, firebaseResources, pgResources }) {
     return {
         Query: {

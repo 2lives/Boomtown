@@ -10,10 +10,12 @@ cd client && npm install
 
 ## Start-up
 
-From inside the `client` directory, run:
+run:
 
 ```bash
 npm run dev
 ```
+
+from inside the `server` directory, then the `client`.
 
 Happy coding :)
