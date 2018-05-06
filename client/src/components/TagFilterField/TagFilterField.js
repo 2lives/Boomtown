@@ -1,41 +1,44 @@
 import React from 'react';
+import { graphql } from 'react-apollo';
 import PropTypes from 'prop-types';
-import { connect } from 'react-redux';
+import gql from 'graphql-tag';
 import SelectField from 'material-ui/SelectField';
 import MenuItem from 'material-ui/MenuItem';
-import {
-    get_item_filters,
-    get_items_and_users
-} from '../../redux/modules/Items';
 
-const TagFilterField = ({ checkedTags, dispatch, tags }) => {
-    const handleFilter = value => {
-        dispatch(get_item_filters(value));
-    };
-
-    return (
+const TagFilterField = ({ handleChange, values, data }) =>
+    data.loading ? (
+        <SelectField disabled />
+    ) : (
         <SelectField
             multiple
-            hintText={'Filter by Tag'}
-            onChange={(event, index, value) => handleFilter(value[0])}
+            value={values}
+            onChange={handleChange}
+            className="filter-select"
+            hintText="Select Categories"
         >
-            {tags &&
-                tags.map((tag, i) => (
-                    <MenuItem
-                        checked={checkedTags && checkedTags.indexOf(tag) > -1}
-                        key={i}
-                        insetChildren
-                        primaryText={tag}
-                        value={tag}
-                    />
-                ))}
+            {data.tagField.map(tag => (
+                <MenuItem
+                    insetChildren
+                    key={tag.tagid}
+                    checked={values && values.indexOf(tag) > -1}
+                    value={tag.tagid}
+                    label={tag.tag}
+                    primaryText={tag.tag}
+                />
+            ))}
         </SelectField>
     );
+TagFilterField.propTypes = {
+    values: PropTypes.array.isRequired,
+    handleChange: PropTypes.func.isRequired
 };
 
-const mapStateToProps = state => ({
-    isLoading: state.itemsData.isLoading,
-    itemsData: state.itemsData,
-    itemFilters: state.itemsData.itemFilters
-});
-export default connect(mapStateToProps)(TagFilterField);
+const tagField = gql`
+    query tagField {
+        tagField {
+            tagid
+            tag
+        }
+    }
+`;
+export default graphql(tagField)(TagFilterField);

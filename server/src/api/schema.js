@@ -20,6 +20,11 @@ const typeDefs = `
           borroweditems: [Item]
      }
 
+     type Tag {
+          tagid: ID
+          tag: String
+     }
+
      type Mutation {
           addItem (
             title: String!
@@ -35,6 +40,7 @@ const typeDefs = `
           users: [User]
           item(id: ID!): Item
           user(id: ID!): User
+          tagField: [Tag]
      }
 
 `;

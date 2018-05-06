@@ -22,6 +22,9 @@ export default function({ jsonResources, firebaseResources, pgResources }) {
             },
             user({ id }) {
                 return firebaseResources.getUser();
+            },
+            tagField(root) {
+                return pgResources.tagField();
             }
         },
 

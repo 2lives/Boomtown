@@ -34,6 +34,9 @@ export default function(app) {
             return pool
                 .query(`SELECT * FROM items WHERE id = ${id}`)
                 .then(resp => resp.rows[0]);
+        },
+        tagField() {
+            return pool.query(`SELECT * FROM tags`).then(resp => resp.rows);
         }
     };
 }

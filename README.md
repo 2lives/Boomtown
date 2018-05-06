@@ -33,7 +33,6 @@ from inside the `server` directory, then the `client`.
 
 ## Author
 
-======
 Brandon Liu
 
 Happy coding :)

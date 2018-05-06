@@ -8,8 +8,9 @@ import TagFilterField from '../TagFilterField';
 import { connect } from 'react-redux';
 import {
     get_items_and_users,
-    get_items_filter
+    get_item_filters
 } from '../../redux/modules/Items';
+import { fbAuth } from '../../config/firebaseConfig';
 
 const styles = {
     width: '100vw',
@@ -44,67 +45,38 @@ const styles = {
     }
 };
 
-class HeaderBar extends Component {
-    //     componentDidMount() {
-    //         const urls = [
-    //             'http://localhost:3000/items',
-    //             'http://localhost:3000/users'
-    //         ];
-    //         this.props.dispatch(get_items_and_users(urls));
-    //     }
-
-    getTags = items => {
-        let tags = [];
-        if (items.length && items[0] !== undefined) {
-            items.map(item => {
-                if (item.tags !== undefined) {
-                    if (!item.tags.includes(undefined)) {
-                        item.tags.map(tag => {
-                            if (!tags.includes(tag)) {
-                                tags.push(tag);
-                            }
-                        });
-                    }
-                }
-            });
-        }
-        return tags;
-    };
-    render() {
-        const tags = this.getTags(this.props.itemsData.items);
-        return (
-            <AppBar style={styles} showMenuIconButton={false}>
-                <div className="logoWrapper" style={styles.logoWrapper}>
-                    <Link to={'/'}>
-                        <img
-                            src={logo}
-                            alt="Boomtown Logo"
-                            style={styles.image}
-                        />
-                    </Link>
-                    {tags.length && (
-                        <TagFilterField
-                            tags={tags}
-                            checkedTags={this.props.itemsData.itemFilters}
-                        />
-                    )}
-                </div>
-                <div
-                    className="appButtonsWrapper"
-                    style={styles.appButtonsWrapper}
-                >
-                    <RaisedButton
-                        label="My Profile"
-                        primary={true}
-                        style={styles.profileButton}
+const HeaderBar = ({ itemFilters, dispatch }) => (
+    <AppBar style={styles} showMenuIconButton={false}>
+        <div className="logoWrapper" style={styles.logoWrapper}>
+            <Link to={'/'}>
+                <img src={logo} alt="Boomtown Logo" style={styles.image} />
+            </Link>
+            <Route
+                exact
+                path="/"
+                render={() => (
+                    <TagFilterField
+                        handleChange={(event, index, values) => {
+                            dispatch(get_item_filters(values));
+                        }}
+                        values={itemFilters}
                     />
+                )}
+            />
+        </div>
+        <div className="appButtonsWrapper" style={styles.appButtonsWrapper}>
+            {/* <Link to={`/profile/${fbAuth.currentUser.id}`}> */}
+            <RaisedButton
+                label="My Profile"
+                primary={true}
+                style={styles.profileButton}
+            />
+            {/* </Link> */}
 
-                    <RaisedButton label="Logout" secondary={true} />
-                </div>
-            </AppBar>
-        );
-    }
-}
+            <RaisedButton label="Logout" secondary={true} />
+        </div>
+    </AppBar>
+);
 
 const mapStateToProps = state => ({
     isLoading: state.itemsData.isLoading,

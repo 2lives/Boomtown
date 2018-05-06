@@ -1,6 +1,7 @@
 import React, { Component } from 'react';
 import FloatingActionButton from 'material-ui/FloatingActionButton';
 import ContentAdd from 'material-ui/svg-icons/content/add';
+import { Link, Route } from 'react-router-dom';
 
 const style = {
     marginRight: 20,
@@ -10,13 +11,25 @@ const style = {
     bottom: 0
 };
 
+const hide = {
+    display: 'none'
+};
+const currentPath = window.location.pathname;
 class Footer extends Component {
     render() {
         return (
             <div>
-                <FloatingActionButton style={style} secondary={true}>
-                    <ContentAdd />
-                </FloatingActionButton>
+                <Link to={'/share'}>
+                    {!currentPath.includes('share') ? (
+                        <FloatingActionButton style={style} secondary={true}>
+                            <ContentAdd />
+                        </FloatingActionButton>
+                    ) : (
+                        <FloatingActionButton style={hide}>
+                            <ContentAdd />
+                        </FloatingActionButton>
+                    )}
+                </Link>
             </div>
         );
     }
