@@ -1,6 +1,6 @@
 # Boomtown
 
-# ##Description
+## Description
 
 Boomtown is a React/Redux app designed to bolster the idea of sharing within communities. Users are free to post items available for borrow, or borrow items themselves. Items are displayed in a modern masonry-style layout for hipster convenience.
 
@@ -22,7 +22,7 @@ npm run dev
 
 from inside the `server` directory, then the `client`.
 
-# ##Built With
+## Built With
 
 *   Apollo Client
 *   Express
@@ -31,10 +31,9 @@ from inside the `server` directory, then the `client`.
 *   React
 *   Redux
 
-##Author
+## Author
 
-```bash
+======
 Brandon Liu
-```
 
 Happy coding :)
