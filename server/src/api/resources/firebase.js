@@ -15,7 +15,7 @@ export default function(app) {
 
     return {
         getUsers: () => {
-            new Promise(resolve => {
+            return new Promise(resolve => {
                 firebaseDB
                     .ref('/users')
                     .once('value')
@@ -26,16 +26,16 @@ export default function(app) {
                         Object.keys(users).forEach(id =>
                             userList.push({ ...users[id], id })
                         );
-                        //     console.log(userList);
+
                         resolve(userList);
                     })
                     .catch(error => console.log(error));
             });
         },
-        getUser: id =>
-            new Promise(resolve => {
+        getUser: id => {
+            return new Promise(resolve => {
                 firebaseDB
-                    .ref(`/users/${id}`)
+                    .ref(`/users/${id}/`)
                     .once('value')
                     .then(snapshot => {
                         resolve({
@@ -44,6 +44,7 @@ export default function(app) {
                         });
                     })
                     .catch(error => console.log(error));
-            })
+            });
+        }
     };
 }

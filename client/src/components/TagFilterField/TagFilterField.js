@@ -10,17 +10,16 @@ const TagFilterField = ({ handleChange, values, data }) =>
         <SelectField disabled />
     ) : (
         <SelectField
-            multiple
+            multiple={true}
             value={values}
             onChange={handleChange}
-            className="filter-select"
             hintText="Select Categories"
         >
             {data.tagField.map(tag => (
                 <MenuItem
                     insetChildren
                     key={tag.tagid}
-                    checked={values && values.indexOf(tag) > -1}
+                    checked={values.indexOf(tag) > -1}
                     value={tag.tagid}
                     label={tag.tag}
                     primaryText={tag.tag}
@@ -29,8 +28,7 @@ const TagFilterField = ({ handleChange, values, data }) =>
         </SelectField>
     );
 TagFilterField.propTypes = {
-    values: PropTypes.array.isRequired,
-    handleChange: PropTypes.func.isRequired
+    values: PropTypes.array.isRequired
 };
 
 const tagField = gql`

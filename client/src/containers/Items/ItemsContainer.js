@@ -27,18 +27,6 @@ const fetchItems = gql`
 `;
 
 class ItemsContainer extends Component {
-    //     filterItems = itemsData => {
-    //         if (itemsData.itemFilters.length > 0) {
-    //             let filteredItems = itemsData.items.filter(item => {
-    //                 return item.tags.filter(
-    //                     tag => itemsData.itemFilters.find(filter => filter === tag) //find the specific tag that the user wants
-    //                 ).length;
-    //             });
-    //             return filteredItems;
-    //         }
-    //         return itemsData.items;
-    //     };
-
     render() {
         return (
             <Query query={fetchItems}>

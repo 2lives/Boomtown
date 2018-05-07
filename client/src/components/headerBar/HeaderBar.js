@@ -79,8 +79,6 @@ const HeaderBar = ({ itemFilters, dispatch }) => (
 );
 
 const mapStateToProps = state => ({
-    isLoading: state.itemsData.isLoading,
-    itemsData: state.itemsData,
     itemFilters: state.itemsData.itemFilters
 });
 

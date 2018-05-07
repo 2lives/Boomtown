@@ -19,17 +19,20 @@ class Footer extends Component {
     render() {
         return (
             <div>
-                <Link to={'/share'}>
-                    {!currentPath.includes('share') ? (
-                        <FloatingActionButton style={style} secondary={true}>
-                            <ContentAdd />
-                        </FloatingActionButton>
-                    ) : (
-                        <FloatingActionButton style={hide}>
-                            <ContentAdd />
-                        </FloatingActionButton>
+                <Route
+                    exact
+                    path="(/|/profile/)"
+                    render={() => (
+                        <Link to={'/share'}>
+                            <FloatingActionButton
+                                style={style}
+                                secondary={true}
+                            >
+                                <ContentAdd />
+                            </FloatingActionButton>
+                        </Link>
                     )}
-                </Link>
+                />
             </div>
         );
     }

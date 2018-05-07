@@ -4,13 +4,13 @@ export default function({ jsonResources, firebaseResources, pgResources }) {
     return {
         UserOwnedItems: new DataLoader(ids => {
             return Promise.all(
-                ids.map(id => jsonResources.getUserOwnedItems(id))
+                ids.map(id => pgResources.getUserOwnedItems(id))
             );
         }),
 
         UserBorrowedItems: new DataLoader(ids => {
             return Promise.all(
-                ids.map(id => jsonResources.getUserBorrowedItems(id))
+                ids.map(id => pgResources.getUserBorrowedItems(id))
             );
         }),
         ItemownerUser: new DataLoader(ids => {

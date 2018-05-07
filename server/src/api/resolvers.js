@@ -4,7 +4,7 @@ import {
     getUser,
     getUserOwnedItems,
     getBorrowedItems
-} from './resources/jsonServer';
+} from '../api/resources/firebase';
 
 const jsonApi = 'http://localhost:3001';
 
@@ -18,10 +18,10 @@ export default function({ jsonResources, firebaseResources, pgResources }) {
                 return firebaseResources.getUsers();
             },
             item({ id }) {
-                return pgResources.getItem();
+                return pgResources.getItem(id);
             },
-            user({ id }) {
-                return firebaseResources.getUser();
+            user(root, { id }) {
+                return firebaseResources.getUser(id);
             },
             tagField(root) {
                 return pgResources.tagField();

@@ -3,7 +3,12 @@ import PropTypes from 'prop-types';
 import { Card, CardText, CardTitle } from 'material-ui/Card';
 import Gravatar from 'react-gravatar';
 
-const Profile = ({ items }) => (
+const styles = {
+    display: 'flex',
+    flexDirectiopn: 'row'
+};
+
+const Profile = ({ profileData }) => (
     <div>
         <Card
             style={{
@@ -11,7 +16,8 @@ const Profile = ({ items }) => (
                 justifyContent: 'center',
                 alignItems: 'center',
                 margin: '0 auto',
-                width: '800px',
+                marginBottom: '50px',
+                width: '850px',
                 height: '225px'
             }}
             containerStyle={{
@@ -23,19 +29,22 @@ const Profile = ({ items }) => (
             }}
         >
             <CardTitle
-            //  title={currentUser.fullname}
-            //  subtitle={currentUser.bio}
+                title={profileData.fullname}
+                subtitle={profileData.bio}
             />
-            <div className="profile-card-container">
+            <div className="profilecard" style={styles}>
                 <CardText>
-                    {/* {' '}
-                    <div>{`${Object.keys(items).length} Items Shared`}</div>
-                    <div>{`${borrowed.length} Items borrowed`}</div>{' '} */}
+                    <div>{`${profileData.owneditems.length} Items Shared`}</div>
+                    <div>{`${
+                        profileData.borroweditems.length
+                    } Items borrowed`}</div>
                 </CardText>
                 <Gravatar
-                // email={currentUser.email}
-                // style={{ borderRadius: '50%' }}
-                // size={175}
+                    email={profileData.email}
+                    style={{
+                        borderRadius: '50%'
+                    }}
+                    size={175}
                 />
             </div>
         </Card>
