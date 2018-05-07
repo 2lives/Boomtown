@@ -5,9 +5,12 @@ import ItemCard from '../itemCard';
 import Masonry from 'react-masonry-component';
 
 const masonryOptions = {
-    transitionDuration: 0,
+    transitionDuration: '0.5s',
     columnwidth: 350,
-    gutter: 20
+    horizontalOrder: true,
+    gutter: 20,
+    itemSelector: '.grid-item',
+    columnWidth: '.grid-item'
 };
 
 const style = {
@@ -21,11 +24,26 @@ const style = {
 const ItemCardList = props => {
     return (
         <Masonry style={style} options={masonryOptions} elementType={'ul'}>
-            {props.itemsData.map((item, index) => (
-                <li key={index} style={style.li}>
-                    <ItemCard itemsData={item} />
-                </li>
-            ))}
+            {props.itemFilters.length !== 0
+                ? props.itemFilters.map(filter => {
+                      const filteredItems = props.itemsData.filter(item =>
+                          item.tags.includes(filter)
+                      );
+                      return filteredItems.map((item, index) => (
+                          <li
+                              key={index}
+                              className={'grid-item'}
+                              style={style.li}
+                          >
+                              <ItemCard itemsData={item} />
+                          </li>
+                      ));
+                  })
+                : props.itemsData.map((item, index) => (
+                      <li key={index} className={'grid-item'} style={style.li}>
+                          <ItemCard itemsData={item} />
+                      </li>
+                  ))}
         </Masonry>
     );
 };

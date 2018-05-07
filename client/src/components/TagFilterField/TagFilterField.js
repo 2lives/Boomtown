@@ -1,42 +1,35 @@
 import React from 'react';
 import { graphql } from 'react-apollo';
 import PropTypes from 'prop-types';
-import gql from 'graphql-tag';
 import SelectField from 'material-ui/SelectField';
+import { connect } from 'react-redux';
 import MenuItem from 'material-ui/MenuItem';
+import { get_item_filters } from '../../redux/modules/Items';
 
-const TagFilterField = ({ handleChange, values, data }) =>
-    data.loading ? (
-        <SelectField disabled />
-    ) : (
+const TagFilter = ({ tags, dispatch, selectedTags }) => {
+    function handleChange(value) {
+        dispatch(get_item_filters(value));
+    }
+
+    return (
         <SelectField
             multiple={true}
-            value={values}
-            onChange={handleChange}
+            onChange={(event, index, value) => handleChange(value[0])}
             hintText="Select Categories"
         >
-            {data.tagField.map(tag => (
-                <MenuItem
-                    insetChildren
-                    key={tag.tagid}
-                    checked={values.indexOf(tag) > -1}
-                    value={tag.tagid}
-                    label={tag.tag}
-                    primaryText={tag.tag}
-                />
-            ))}
+            {tags &&
+                tags.map((tag, i) => (
+                    <MenuItem
+                        insetChildren
+                        key={i}
+                        checked={selectedTags && selectedTags.indexOf(tag) > -1}
+                        value={tag}
+                        label={tag}
+                        primaryText={tag}
+                    />
+                ))}
         </SelectField>
     );
-TagFilterField.propTypes = {
-    values: PropTypes.array.isRequired
 };
 
-const tagField = gql`
-    query tagField {
-        tagField {
-            tagid
-            tag
-        }
-    }
-`;
-export default graphql(tagField)(TagFilterField);
+export default connect()(TagFilter);

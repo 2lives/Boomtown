@@ -5,7 +5,13 @@ import Gravatar from 'react-gravatar';
 
 const styles = {
     display: 'flex',
-    flexDirectiopn: 'row'
+    flexDirectiopn: 'row',
+    cardText: {
+        marginRight: '30px'
+    },
+    cardTitle: {
+        marginBottom: '75px'
+    }
 };
 
 const Profile = ({ profileData }) => (
@@ -15,10 +21,10 @@ const Profile = ({ profileData }) => (
                 display: 'flex',
                 justifyContent: 'center',
                 alignItems: 'center',
-                margin: '0 auto',
-                marginBottom: '50px',
                 width: '850px',
-                height: '225px'
+                height: '225px',
+                margin: '0 auto',
+                marginBottom: '50px'
             }}
             containerStyle={{
                 display: 'flex',
@@ -29,12 +35,14 @@ const Profile = ({ profileData }) => (
             }}
         >
             <CardTitle
+                className="cardTitle"
+                style={styles.cardTitle}
                 title={profileData.fullname}
                 subtitle={profileData.bio}
             />
             <div className="profilecard" style={styles}>
-                <CardText>
-                    <div>{`${profileData.owneditems.length} Items Shared`}</div>
+                <CardText className="cardText" style={styles.cardText}>
+                    <div>{`${profileData.owneditems.length}`} Items Shared</div>
                     <div>{`${
                         profileData.borroweditems.length
                     } Items borrowed`}</div>
@@ -52,9 +60,7 @@ const Profile = ({ profileData }) => (
 );
 
 Profile.propTypes = {
-    //     currentUser: PropTypes.object.isRequired,
-    //     items: PropTypes.array.isRequired,
-    //     borrowed: PropTypes.array.isRequired
+    profileData: PropTypes.object.isRequired
 };
 
 export default Profile;

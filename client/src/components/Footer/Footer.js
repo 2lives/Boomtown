@@ -10,11 +10,6 @@ const style = {
     right: 0,
     bottom: 0
 };
-
-const hide = {
-    display: 'none'
-};
-const currentPath = window.location.pathname;
 class Footer extends Component {
     render() {
         return (

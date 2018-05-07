@@ -4,13 +4,19 @@ import RaisedButton from 'material-ui/RaisedButton';
 import { Link, Route } from 'react-router-dom';
 import logo from '../../images/boomtown-logo.svg';
 import AppBar from 'material-ui/AppBar';
-import TagFilterField from '../TagFilterField';
+import TagFilter from '../TagFilterField';
 import { connect } from 'react-redux';
-import {
-    get_items_and_users,
-    get_item_filters
-} from '../../redux/modules/Items';
+import { Query } from 'react-apollo';
+import gql from 'graphql-tag';
 import { fbAuth } from '../../config/firebaseConfig';
+
+const tagsQuery = gql`
+    query {
+        items {
+            tags
+        }
+    }
+`;
 
 const styles = {
     width: '100vw',
@@ -39,47 +45,85 @@ const styles = {
     },
     appButtonsWrapper: {
         padding: '10px'
-    },
-    TagFilterField: {
-        paddingBottom: '10px'
     }
 };
 
-const HeaderBar = ({ itemFilters, dispatch }) => (
-    <AppBar style={styles} showMenuIconButton={false}>
-        <div className="logoWrapper" style={styles.logoWrapper}>
-            <Link to={'/'}>
-                <img src={logo} alt="Boomtown Logo" style={styles.image} />
-            </Link>
-            <Route
-                exact
-                path="/"
-                render={() => (
-                    <TagFilterField
-                        handleChange={(event, index, values) => {
-                            dispatch(get_item_filters(values));
-                        }}
-                        values={itemFilters}
-                    />
-                )}
-            />
-        </div>
-        <div className="appButtonsWrapper" style={styles.appButtonsWrapper}>
-            {/* <Link to={`/profile/${fbAuth.currentUser.id}`}> */}
-            <RaisedButton
-                label="My Profile"
-                primary={true}
-                style={styles.profileButton}
-            />
-            {/* </Link> */}
+class HeaderBar extends Component {
+    loadTags = items => {
+        const tags = [];
+        if (items[0] !== undefined) {
+            items.map(item => {
+                if (item.tags !== undefined) {
+                    if (!item.tags.includes(undefined)) {
+                        item.tags.map(tag => {
+                            if (!tags.includes(tag)) {
+                                tags.push(tag);
+                            }
+                        });
+                    }
+                }
+            });
+        }
+        return tags;
+    };
 
-            <RaisedButton label="Logout" secondary={true} />
-        </div>
-    </AppBar>
-);
+    render() {
+        return (
+            <Query query={tagsQuery}>
+                {({ loading, error, data }) => {
+                    if (loading) return <p>loading</p>;
+                    if (error) return <p>Error!</p>;
+                    const tags = this.loadTags(data.items);
+                    return (
+                        <AppBar style={styles} showMenuIconButton={false}>
+                            <div
+                                className="logoWrapper"
+                                style={styles.logoWrapper}
+                            >
+                                <Link to={'/'}>
+                                    <img
+                                        src={logo}
+                                        alt="Boomtown Logo"
+                                        style={styles.image}
+                                    />
+                                </Link>
+                                <Route
+                                    exact
+                                    path="/"
+                                    render={() => (
+                                        <TagFilter
+                                            tags={tags}
+                                            selectedTags={
+                                                this.props.itemsData.itemFilters
+                                            }
+                                        />
+                                    )}
+                                />
+                            </div>
+                            <div
+                                className="appButtonsWrapper"
+                                style={styles.appButtonsWrapper}
+                            >
+                                {/* <Link to={`/profile/${fbAuth.currentUser.id}`}> */}
+                                <RaisedButton
+                                    label="My Profile"
+                                    primary={true}
+                                    style={styles.profileButton}
+                                />
+                                {/* </Link> */}
+
+                                <RaisedButton label="Logout" secondary={true} />
+                            </div>
+                        </AppBar>
+                    );
+                }}
+            </Query>
+        );
+    }
+}
 
 const mapStateToProps = state => ({
-    itemFilters: state.itemsData.itemFilters
+    itemsData: state.itemsData
 });
 
 export default connect(mapStateToProps)(HeaderBar);

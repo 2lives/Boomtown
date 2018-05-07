@@ -1,6 +1,8 @@
 import React, { Component } from 'react';
 import Items from './Items';
 import { Query } from 'react-apollo';
+import { connect } from 'react-redux';
+
 import gql from 'graphql-tag';
 
 const fetchItems = gql`
@@ -26,18 +28,24 @@ const fetchItems = gql`
     }
 `;
 
-class ItemsContainer extends Component {
-    render() {
-        return (
-            <Query query={fetchItems}>
-                {({ loading, error, data }) => {
-                    if (loading) return <p>loading </p>;
-                    if (error) return <p>error</p>;
-                    return <Items itemsData={data.items} />;
-                }}
-            </Query>
-        );
-    }
-}
+const ItemsContainer = props => {
+    console.log(this.props);
+    return (
+        <Query query={fetchItems}>
+            {({ loading, error, data }) => {
+                if (loading) return <p>loading </p>;
+                if (error) return <p>error</p>;
+                return (
+                    <Items
+                        itemsData={data.items}
+                        itemFilters={props.itemFilters}
+                    />
+                );
+            }}
+        </Query>
+    );
+};
 
-export default ItemsContainer;
+export default connect(state => ({
+    itemFilters: state.itemsData.itemFilters
+}))(ItemsContainer);
