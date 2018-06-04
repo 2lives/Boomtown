@@ -1,5 +1,4 @@
 import React, { Component } from 'react';
-import FlatButton from 'material-ui/FlatButton';
 import RaisedButton from 'material-ui/RaisedButton';
 import { Step, Stepper, StepLabel, StepContent } from 'material-ui/Stepper';
 import TextField from 'material-ui/TextField';
@@ -89,21 +88,6 @@ const addItemMutation = gql`
         )
     }
 `;
-//mutation working in graphiql
-
-const fakeItemsData = {
-    imageurl: 'https://picsum.photos/200/300',
-    title: 'Garbage',
-    itemowner: {
-        id: 1,
-        bio: 'goodbye friends',
-        fullname: 'brandon',
-        email: ''
-    },
-    created: new Date(),
-    tags: ['hurt'],
-    description: 'hurt'
-};
 
 const styles = {
     shareWrapper: {
@@ -115,24 +99,27 @@ const styles = {
 };
 
 class ShareForm extends Component {
-    state = {
-        finished: false,
-        stepIndex: 0,
-        selectedTags: [],
-        newItemData: {
-            imageurl: '',
-            title: '',
-            itemowner: {
-                id: 1,
-                bio: '',
-                fullname: '',
-                email: ''
-            },
-            created: new Date(),
-            tags: [],
-            description: ''
-        }
-    };
+    constructor() {
+        super();
+        this.state = {
+            finished: false,
+            stepIndex: 0,
+            selectedTags: [],
+            newItemData: {
+                imageurl: '',
+                title: 'Title',
+                itemowner: {
+                    id: '1lnsddfdfnfvopdv',
+                    bio: '',
+                    fullname: '',
+                    email: ''
+                },
+                created: new Date(),
+                tags: [],
+                description: 'Description'
+            }
+        };
+    }
 
     handleNext = () => {
         const { stepIndex } = this.state;
@@ -149,13 +136,83 @@ class ShareForm extends Component {
         }
     };
     handleChange = tag => {
+        console.log('fired');
+        console.log(this.state.tags);
         const { selectedTags } = this.state;
         if (selectedTags.indexOf(tag) > -1) {
             selectedTags.splice(selectedTags.indexOf(tag), 1);
-            this.setState({ selectedTags: [...selectedTags] });
+            this.setState({
+                selectedTags: [...selectedTags],
+
+                newItemData: {
+                    imageurl: '',
+                    title: this.state.newItemData.title,
+                    itemowner: {
+                        id: '1lnsddfdfnfvopdv',
+                        bio: '',
+                        fullname: '',
+                        email: ''
+                    },
+                    created: new Date(),
+                    tags: [...selectedTags],
+                    description: this.state.newItemData.description
+                }
+            });
         } else {
-            this.setState({ selectedTage: [...selectedTags, tag] });
+            this.setState({
+                selectedTags: [...selectedTags, tag],
+
+                newItemData: {
+                    imageurl: '',
+                    title: this.state.newItemData.title,
+                    itemowner: {
+                        id: '1lnsddfdfnfvopdv',
+                        bio: '',
+                        fullname: '',
+                        email: ''
+                    },
+                    created: new Date(),
+                    tags: [selectedTags],
+                    description: this.state.newItemData.description
+                }
+            });
         }
+    };
+
+    handleUpdate = event => {
+        this.setState({
+            newItemData: {
+                imageurl: '',
+                [event.target.name]: event.target.value,
+                itemowner: {
+                    id: '1lnsddfdfnfvopdv',
+                    bio: '',
+                    fullname: '',
+                    email: ''
+                },
+                created: new Date(),
+                tags: [],
+                description: this.state.newItemData.description
+            }
+        });
+    };
+
+    handleUpdateAgain = event => {
+        this.setState({
+            newItemData: {
+                imageurl: '',
+                title: this.state.newItemData.title,
+                itemowner: {
+                    id: '1lnsddfdfnfvopdv',
+                    bio: '',
+                    fullname: '',
+                    email: ''
+                },
+                created: new Date(),
+                tags: [],
+                [event.target.name]: event.target.value
+            }
+        });
     };
 
     validate(...args) {
@@ -193,11 +250,11 @@ class ShareForm extends Component {
 
     render() {
         const { finished, stepIndex } = this.state;
-        console.log(this.props);
+        console.log(this.state.selectedTags);
         return (
             <div className="shareWrapper" style={styles.shareWrapper}>
                 <div className="previewItem" style={styles.previewItem}>
-                    <ItemCard itemsData={fakeItemsData} />
+                    <ItemCard itemsData={this.state.newItemData} />
                 </div>
                 <Form
                     onSubmit={values => this.onSubmit(values)}
@@ -218,7 +275,8 @@ class ShareForm extends Component {
                                                     'k721A4pRNggCx7b6ryEE8vx1VIi1',
                                                 tags: this.state.selectedTags.map(
                                                     tag => tag.tagid.toString()
-                                                )
+                                                ),
+                                                imageurl: 'to be added'
                                             }
                                         });
                                     }}
@@ -285,6 +343,10 @@ class ShareForm extends Component {
                                                             <TextField
                                                                 {...input}
                                                                 floatingLabelText="Title"
+                                                                onInput={
+                                                                    this
+                                                                        .handleUpdate
+                                                                }
                                                             />
 
                                                             {meta.touched &&
@@ -311,6 +373,10 @@ class ShareForm extends Component {
                                                             <TextField
                                                                 {...input}
                                                                 floatingLabelText="Description"
+                                                                onInput={
+                                                                    this
+                                                                        .handleUpdateAgain
+                                                                }
                                                             />
 
                                                             {meta.touched &&
@@ -352,7 +418,7 @@ class ShareForm extends Component {
                                                                 multiple
                                                                 {...input}
                                                                 hintText="Select Categories"
-                                                                value="tags"
+                                                                //     value="tags"
                                                                 selectionRenderer={
                                                                     this
                                                                         .selectionRenderer
@@ -364,6 +430,7 @@ class ShareForm extends Component {
                                                                 ) =>
                                                                     this.handleChange(
                                                                         value[0]
+                                                                            .value
                                                                     )
                                                                 }
                                                             >
@@ -383,7 +450,7 @@ class ShareForm extends Component {
                                                                                 }
                                                                                 checked={
                                                                                     this.state.selectedTags.indexOf(
-                                                                                        tag
+                                                                                        tag.value
                                                                                     ) >
                                                                                     -1
                                                                                 }

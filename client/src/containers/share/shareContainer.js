@@ -3,13 +3,18 @@ import React, { Component } from 'react';
 // import gql from 'graphql-tag';
 
 class shareContainer extends Component {
-    state = {
-        value: '',
-        name: ''
-    };
+    //     constructor() {
+    //         super();
+    //         this.state = {
+    //             tags: {
+    //                 value: '',
+    //                 name: ''
+    //             }
+    //         };
+    //     }
 
     render() {
-        return <ShareForm tagField={this.state} />;
+        return <ShareForm />;
     }
     //pass down to share, attach to onchange
     //bind or use arrow function
