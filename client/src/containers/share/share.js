@@ -9,6 +9,7 @@ import ItemCard from '../../components/itemCard';
 import { Form, Field } from 'react-final-form';
 import { Mutation } from 'react-apollo';
 import gql from 'graphql-tag';
+import { updateLocale } from 'moment';
 
 const addItem = gql`
     mutation addItem(
@@ -63,32 +64,6 @@ const tags = [
     }
 ];
 
-const addItemMutation = gql`
-    mutation addItem(
-        $title: String!
-        $description: String!
-        $imageurl: String!
-        $tags: [String]!
-        $created: String!
-        $available: Boolean!
-        $itemowner: String!
-        $borrower: String
-    ) {
-        addItem(
-            title: $title
-            description: $description
-            imageurl: $imageurl
-            itemowner: $itemowner
-
-            tags: $tags
-            available: $available
-
-            created: $created
-            borrower: $borrower
-        )
-    }
-`;
-
 const styles = {
     shareWrapper: {
         display: 'flex'
@@ -99,12 +74,12 @@ const styles = {
 };
 
 class ShareForm extends Component {
-    constructor() {
-        super();
+    constructor(props) {
+        super(props);
         this.state = {
             finished: false,
             stepIndex: 0,
-            selectedTags: [],
+            //   tags: [],
             newItemData: {
                 imageurl: '',
                 title: 'Title',
@@ -133,49 +108,6 @@ class ShareForm extends Component {
         const { stepIndex } = this.state;
         if (stepIndex > 0) {
             this.setState({ stepIndex: stepIndex - 1 });
-        }
-    };
-    handleChange = tag => {
-        console.log('fired');
-        console.log(this.state.tags);
-        const { selectedTags } = this.state;
-        if (selectedTags.indexOf(tag) > -1) {
-            selectedTags.splice(selectedTags.indexOf(tag), 1);
-            this.setState({
-                selectedTags: [...selectedTags],
-
-                newItemData: {
-                    imageurl: '',
-                    title: this.state.newItemData.title,
-                    itemowner: {
-                        id: '1lnsddfdfnfvopdv',
-                        bio: '',
-                        fullname: '',
-                        email: ''
-                    },
-                    created: new Date(),
-                    tags: [...selectedTags],
-                    description: this.state.newItemData.description
-                }
-            });
-        } else {
-            this.setState({
-                selectedTags: [...selectedTags, tag],
-
-                newItemData: {
-                    imageurl: '',
-                    title: this.state.newItemData.title,
-                    itemowner: {
-                        id: '1lnsddfdfnfvopdv',
-                        bio: '',
-                        fullname: '',
-                        email: ''
-                    },
-                    created: new Date(),
-                    tags: [selectedTags],
-                    description: this.state.newItemData.description
-                }
-            });
         }
     };
 
@@ -214,6 +146,49 @@ class ShareForm extends Component {
             }
         });
     };
+    handleChange = tag => {
+        const { tags } = this.state.newItemData;
+        if (tags.indexOf(tag) > -1) {
+            tags.splice(tags.indexOf(tag), 1);
+            this.setState(
+                {
+                    newItemData: {
+                        imageurl: '',
+                        title: this.state.newItemData.title,
+                        itemowner: {
+                            id: '1lnsddfdfnfvopdv',
+                            bio: '',
+                            fullname: '',
+                            email: ''
+                        },
+                        created: new Date(),
+                        tags: [...tags],
+                        description: this.state.newItemData.description
+                    }
+                },
+                () => console.log(this.state)
+            );
+        } else {
+            this.setState(
+                {
+                    newItemData: {
+                        imageurl: '',
+                        title: this.state.newItemData.title,
+                        itemowner: {
+                            id: '1lnsddfdfnfvopdv',
+                            bio: '',
+                            fullname: '',
+                            email: ''
+                        },
+                        created: new Date(),
+                        tags: [...tags, tag],
+                        description: this.state.newItemData.description
+                    }
+                },
+                () => console.log(this.state)
+            );
+        }
+    };
 
     validate(...args) {
         console.log('validating:', args);
@@ -250,7 +225,8 @@ class ShareForm extends Component {
 
     render() {
         const { finished, stepIndex } = this.state;
-        console.log(this.state.selectedTags);
+
+        console.log(this.state.newItemData.tags);
         return (
             <div className="shareWrapper" style={styles.shareWrapper}>
                 <div className="previewItem" style={styles.previewItem}>
@@ -265,6 +241,10 @@ class ShareForm extends Component {
                                 <form
                                     onSubmit={e => {
                                         e.preventDefault();
+                                        console.log(
+                                            values,
+                                            this.state.newItemData.tags
+                                        );
                                         handleSubmit(values);
                                         addItem({
                                             variables: {
@@ -273,9 +253,8 @@ class ShareForm extends Component {
                                                 available: true,
                                                 itemowner:
                                                     'k721A4pRNggCx7b6ryEE8vx1VIi1',
-                                                tags: this.state.selectedTags.map(
-                                                    tag => tag.tagid.toString()
-                                                ),
+                                                tags: this.state.newItemData
+                                                    .tags,
                                                 imageurl: 'to be added'
                                             }
                                         });
@@ -449,7 +428,7 @@ class ShareForm extends Component {
                                                                                     tag.value
                                                                                 }
                                                                                 checked={
-                                                                                    this.state.selectedTags.indexOf(
+                                                                                    this.state.newItemData.tags.indexOf(
                                                                                         tag.value
                                                                                     ) >
                                                                                     -1
