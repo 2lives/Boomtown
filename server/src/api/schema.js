@@ -26,12 +26,15 @@ const typeDefs = `
      }
 
      type Mutation {
-          addItem (
+          addItem(
             title: String!
-            itemowner: String
-            imageurl: String
-            tags: String
-            created: String
+            description: String!
+            imageurl: String!
+            itemowner: String!
+            tags: [String]
+            created: String!
+            available: Boolean!
+   
           ): Item
         }
 

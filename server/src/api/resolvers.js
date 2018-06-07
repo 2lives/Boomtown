@@ -48,8 +48,8 @@ export default function({ jsonResources, firebaseResources, pgResources }) {
             }
         },
         Mutation: {
-            addItem(root, args) {
-                return pgResources.addItem();
+            addItem(root, values) {
+                return pgResources.addItem(values);
             }
         }
     };

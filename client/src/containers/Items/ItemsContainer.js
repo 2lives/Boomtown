@@ -29,7 +29,6 @@ const fetchItems = gql`
 `;
 
 const ItemsContainer = props => {
-    console.log(this.props);
     return (
         <Query query={fetchItems}>
             {({ loading, error, data }) => {

@@ -2,7 +2,6 @@ import React from 'react';
 import ItemCardList from '../../components/itemCardList';
 
 const Items = props => {
-    console.log(this.props);
     return (
         <div>
             <ItemCardList

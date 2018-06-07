@@ -2,15 +2,12 @@ import React, { Component } from 'react';
 import RaisedButton from 'material-ui/RaisedButton';
 import { Step, Stepper, StepLabel, StepContent } from 'material-ui/Stepper';
 import TextField from 'material-ui/TextField';
-import itemCard from '../../components/itemCard';
 import SelectField from 'material-ui/SelectField';
 import { MenuItem } from 'material-ui/Menu';
 import ItemCard from '../../components/itemCard';
 import { Form, Field } from 'react-final-form';
 import { Mutation } from 'react-apollo';
 import gql from 'graphql-tag';
-import { updateLocale } from 'moment';
-
 const addItem = gql`
     mutation addItem(
         $title: String!
@@ -24,12 +21,15 @@ const addItem = gql`
         addItem(
             title: $title
             description: $description
-            itemowner: $itemowner
             imageurl: $imageurl
             tags: $tags
             created: $created
+            itemowner: $itemowner
             available: $available
-        )
+        ) {
+            title
+            description
+        }
     }
 `;
 
@@ -79,15 +79,15 @@ class ShareForm extends Component {
         this.state = {
             finished: false,
             stepIndex: 0,
-            //   tags: [],
+            selectedTags: [],
             newItemData: {
                 imageurl: '',
                 title: 'Title',
                 itemowner: {
                     id: '1lnsddfdfnfvopdv',
-                    bio: '',
-                    fullname: '',
-                    email: ''
+                    bio: 'im bad',
+                    fullname: 'brandon',
+                    email: 'brandon@loggedinuser.com'
                 },
                 created: new Date(),
                 tags: [],
@@ -146,12 +146,17 @@ class ShareForm extends Component {
             }
         });
     };
+
     handleChange = tag => {
-        const { tags } = this.state.newItemData;
-        if (tags.indexOf(tag) > -1) {
-            tags.splice(tags.indexOf(tag), 1);
+        console.log(tag);
+        const { selectedTags } = this.state;
+        if (selectedTags.indexOf(tag) > -1) {
+            selectedTags.splice(selectedTags.indexOf(tag), 1);
+            const tagArr = [];
+            selectedTags.map(tag => tagArr.push(tag.value));
             this.setState(
                 {
+                    selectedTags: [...selectedTags],
                     newItemData: {
                         imageurl: '',
                         title: this.state.newItemData.title,
@@ -162,15 +167,18 @@ class ShareForm extends Component {
                             email: ''
                         },
                         created: new Date(),
-                        tags: [...tags],
+                        tags: [...tagArr],
                         description: this.state.newItemData.description
                     }
                 },
                 () => console.log(this.state)
             );
         } else {
+            const tagArr = [];
+            selectedTags.map(tag => tagArr.push(tag.value));
             this.setState(
                 {
+                    selectedTags: [...selectedTags, tag],
                     newItemData: {
                         imageurl: '',
                         title: this.state.newItemData.title,
@@ -181,7 +189,7 @@ class ShareForm extends Component {
                             email: ''
                         },
                         created: new Date(),
-                        tags: [...tags, tag],
+                        tags: [...tagArr, tag.value],
                         description: this.state.newItemData.description
                     }
                 },
@@ -225,8 +233,6 @@ class ShareForm extends Component {
 
     render() {
         const { finished, stepIndex } = this.state;
-
-        console.log(this.state.newItemData.tags);
         return (
             <div className="shareWrapper" style={styles.shareWrapper}>
                 <div className="previewItem" style={styles.previewItem}>
@@ -243,7 +249,9 @@ class ShareForm extends Component {
                                         e.preventDefault();
                                         console.log(
                                             values,
-                                            this.state.newItemData.tags
+                                            this.state.selectedTags.map(
+                                                tag => tag.value
+                                            )
                                         );
                                         handleSubmit(values);
                                         addItem({
@@ -253,8 +261,9 @@ class ShareForm extends Component {
                                                 available: true,
                                                 itemowner:
                                                     'k721A4pRNggCx7b6ryEE8vx1VIi1',
-                                                tags: this.state.newItemData
-                                                    .tags,
+                                                tags: this.state.selectedTags.map(
+                                                    tag => tag.tagid
+                                                ),
                                                 imageurl: 'to be added'
                                             }
                                         });
@@ -397,7 +406,6 @@ class ShareForm extends Component {
                                                                 multiple
                                                                 {...input}
                                                                 hintText="Select Categories"
-                                                                //     value="tags"
                                                                 selectionRenderer={
                                                                     this
                                                                         .selectionRenderer
@@ -409,7 +417,6 @@ class ShareForm extends Component {
                                                                 ) =>
                                                                     this.handleChange(
                                                                         value[0]
-                                                                            .value
                                                                     )
                                                                 }
                                                             >
@@ -428,8 +435,8 @@ class ShareForm extends Component {
                                                                                     tag.value
                                                                                 }
                                                                                 checked={
-                                                                                    this.state.newItemData.tags.indexOf(
-                                                                                        tag.value
+                                                                                    this.state.selectedTags.indexOf(
+                                                                                        tag
                                                                                     ) >
                                                                                     -1
                                                                                 }

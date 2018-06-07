@@ -59,6 +59,7 @@ export default function(app) {
                 )
                 .then(res => res.rows);
         },
+
         getUserOwnedItems(id) {
             return pool
                 .query(
@@ -79,6 +80,44 @@ export default function(app) {
                   GROUP BY items.id`
                 )
                 .then(res => res.rows);
+        },
+        addItem(values) {
+            console.log(values);
+            return pool.connect((err, client, done) => {
+                client.query('BEGIN', err => {
+                    console.log('error:', err);
+                    client
+                        .query(
+                            `INSERT INTO items(title, imageurl, description, itemowner) VALUES ($1, $2, $3, $4) RETURNING id, title, imageurl, description, itemowner, created`,
+                            [
+                                values.title,
+                                values.imageurl,
+                                values.description,
+                                values.itemowner
+                            ]
+                        )
+                        .then(res => {
+                            for (let i = 0; i < values.tags.length; i++) {
+                                client.query(
+                                    `INSERT INTO itemtags(itemid, tags) VALUES ($1, $2) RETURNING itemid, tags`,
+                                    [res.rows[0].id, values.tags[i]]
+                                );
+                            }
+                        })
+                        .then(() => {
+                            client.query('COMMIT', err => {
+                                if (err) {
+                                    console.error(
+                                        'Error committing transaction',
+                                        err.stack
+                                    );
+                                }
+                                done();
+                            });
+                        })
+                        .catch(err => console.log(err));
+                });
+            });
         }
     };
 }
