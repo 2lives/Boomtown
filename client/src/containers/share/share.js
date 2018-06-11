@@ -233,14 +233,11 @@ class ShareForm extends Component {
     }
 
     picUploader() {
-        // grabs the file object from the photo input field
         const file = document.querySelector('#picUpload').files[0];
 
-        //grabs the name (formatted with the date) and metadata from the uploaded file
         const name = +new Date() + '-' + file.name;
         const metadata = { contentType: file.type };
 
-        // creates the file upload task for the firebase image storage reference, this task is a promise
         const task = fbStorage.child(name).put(file, metadata);
         task.on(
             'state_changed',
