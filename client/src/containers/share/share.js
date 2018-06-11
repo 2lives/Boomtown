@@ -8,6 +8,7 @@ import ItemCard from '../../components/itemCard';
 import { Form, Field } from 'react-final-form';
 import { Mutation } from 'react-apollo';
 import gql from 'graphql-tag';
+import { fbStorage } from '../../firebase/firebase';
 const addItem = gql`
     mutation addItem(
         $title: String!
