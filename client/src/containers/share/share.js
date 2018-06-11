@@ -115,7 +115,7 @@ class ShareForm extends Component {
     handleUpdate = event => {
         this.setState({
             newItemData: {
-                imageurl: '',
+                imageurl: this.state.newItemData.imageurl,
                 [event.target.name]: event.target.value,
                 itemowner: {
                     id: '1lnsddfdfnfvopdv',
@@ -133,7 +133,7 @@ class ShareForm extends Component {
     handleUpdateAgain = event => {
         this.setState({
             newItemData: {
-                imageurl: '',
+                imageurl: this.state.newItemData.imageurl,
                 title: this.state.newItemData.title,
                 itemowner: {
                     id: '1lnsddfdfnfvopdv',
@@ -159,7 +159,7 @@ class ShareForm extends Component {
                 {
                     selectedTags: [...selectedTags],
                     newItemData: {
-                        imageurl: '',
+                        imageurl: this.state.newItemData.imageurl,
                         title: this.state.newItemData.title,
                         itemowner: {
                             id: '1lnsddfdfnfvopdv',
@@ -181,7 +181,7 @@ class ShareForm extends Component {
                 {
                     selectedTags: [...selectedTags, tag],
                     newItemData: {
-                        imageurl: '',
+                        imageurl: this.state.newItemData.imageurl,
                         title: this.state.newItemData.title,
                         itemowner: {
                             id: '1lnsddfdfnfvopdv',
@@ -232,6 +232,45 @@ class ShareForm extends Component {
         );
     }
 
+    picUploader() {
+        // grabs the file object from the photo input field
+        const file = document.querySelector('#picUpload').files[0];
+
+        //grabs the name (formatted with the date) and metadata from the uploaded file
+        const name = +new Date() + '-' + file.name;
+        const metadata = { contentType: file.type };
+
+        // creates the file upload task for the firebase image storage reference, this task is a promise
+        const task = fbStorage.child(name).put(file, metadata);
+        task.on(
+            'state_changed',
+            snapshot => {
+                let transferPercentage =
+                    (snapshot.bytesTransferred / snapshot.totalBytes) * 100;
+                this.setState({
+                    linearProgress: transferPercentage,
+                    isUploading: true
+                });
+                console.log(transferPercentage);
+            },
+            function error(err) {},
+            function complete() {}
+        );
+        task.then(snapshot => {
+            this.setState({
+                newItemData: {
+                    imageurl: snapshot.downloadURL,
+                    title: this.state.newItemData.title,
+                    itemowner: this.state.newItemData.itemowner,
+                    created: this.state.newItemData.created,
+                    tags: this.state.newItemData.tags,
+                    description: this.state.newItemData.description
+                }
+            });
+            console.log(this.state.newItemData.imageurl);
+        }).catch(e => console.log(e));
+    }
+
     render() {
         const { finished, stepIndex } = this.state;
         return (
@@ -250,6 +289,7 @@ class ShareForm extends Component {
                                         e.preventDefault();
                                         console.log(
                                             values,
+                                            this.state.newItemData.imageurl,
                                             this.state.selectedTags.map(
                                                 tag => tag.value
                                             )
@@ -265,7 +305,8 @@ class ShareForm extends Component {
                                                 tags: this.state.selectedTags.map(
                                                     tag => tag.tagid
                                                 ),
-                                                imageurl: 'to be added'
+                                                imageurl: this.state.newItemData
+                                                    .imageurl
                                             }
                                         });
                                     }}
@@ -298,6 +339,11 @@ class ShareForm extends Component {
                                                             >
                                                                 <input
                                                                     type="file"
+                                                                    id="picUpload"
+                                                                    accept="image/*"
+                                                                    onChange={this.picUploader.bind(
+                                                                        this
+                                                                    )}
                                                                     style={{
                                                                         display:
                                                                             'none'

@@ -8,7 +8,6 @@ var config = {
     storageBucket: 'boomtown-7cd02.appspot.com',
     messagingSenderId: '736276730535'
 };
-firebase.initializeApp(config);
 
 const fbStorage = firebase.storage().ref();
 
